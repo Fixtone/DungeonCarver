@@ -12,8 +12,8 @@ namespace TheDivineComedy.MapCreation
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class CaveMapCreationStrategy<T> : IMapCreationStrategy<T> where T : class, IMap, new()
     {
-        private readonly int _mapWidth;
-        private readonly int _mapHeight;
+        private readonly int _width;
+        private readonly int _height;
         private readonly int _neighbours;
         private readonly int _iterations;
         private readonly int _closeTileProb;
@@ -48,11 +48,11 @@ namespace TheDivineComedy.MapCreation
         /// <param name="totalIterations">Recommend int between 2 and 5. Number of times to execute the cellular automata algorithm.</param>
         /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>
         /// <param name="random">A class implementing IRandom that will be used to generate pseudo-random numbers necessary to create the Map</param>
-        public CaveMapCreationStrategy(int mapWidth, int mapHeight, int neighbours, int iterations, int closeTileProb, int lowerLimit, int upperLimit, int emptyNeighbours,
+        public CaveMapCreationStrategy(int width, int height, int neighbours, int iterations, int closeTileProb, int lowerLimit, int upperLimit, int emptyNeighbours,
                                        int emptyTileNeighbours, int corridorSpace, int corridor_MaxTurns, int corridor_Min, int corridor_Max, int breakOut)
         {
-            _mapWidth = mapWidth;
-            _mapHeight = mapHeight;
+            _width = width;
+            _height = height;
             _neighbours = neighbours;
             _iterations = iterations;
             _closeTileProb = closeTileProb;
@@ -80,7 +80,7 @@ namespace TheDivineComedy.MapCreation
         /// <returns>An IMap of the specified type</returns>
         public T CreateMap()
         {
-            _map.Initialize(_mapWidth, _mapHeight);
+            _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Wall));
 
             BuildCaves();
@@ -91,11 +91,11 @@ namespace TheDivineComedy.MapCreation
             new System.IO.StreamWriter(@"D:\WriteLines2.txt"))
             {
                 List<char> line = new List<char>();
-                for (int y = 0; y < _mapHeight; y++)
+                for (int y = 0; y < _height; y++)
                 {
-                    for (int x = 0; x < _mapWidth; x++)
+                    for (int x = 0; x < _width; x++)
                     {
-                        if (_map.GetTile(x, y).Item2.type.Equals(Tile.Type.Wall))
+                        if (_map.GetTile(x, y).Tile.type.Equals(Tile.Type.Wall))
                         {
                             line.Add('#');
                         }
@@ -114,16 +114,16 @@ namespace TheDivineComedy.MapCreation
 
         private void BuildCaves()
         {
-            foreach (Tuple<Vector2Int, Tile> tile in _map.GetAllTiles())
+            foreach (TileData tileData in _map.GetAllTiles())
             {
-                if (IsBorderTile(tile))
+                if (_map.IsBorderTile(tileData.Position))
                 {
                     continue;
                 }
 
                 if (UnityEngine.Random.Range(0, 99) < _closeTileProb)
                 {
-                    _map.SetTile(tile.Item1.x, tile.Item1.y, new Tile(Tile.Type.Empty));
+                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
                 }
             }
 
@@ -132,11 +132,11 @@ namespace TheDivineComedy.MapCreation
             //Pick cells at random
             for (int x = 0; x <= _iterations; x++)
             {
-                tilePosition = new Vector2Int(UnityEngine.Random.Range(0, _mapWidth), UnityEngine.Random.Range(0, _mapHeight));
+                tilePosition = new Vector2Int(UnityEngine.Random.Range(0, _width), UnityEngine.Random.Range(0, _height));
 
                 //if the randomly selected cell has more closed neighbours than the property Neighbours
                 //set it closed, else open it
-                if (NeighboursGetNineDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Item2.type.Equals(Tile.Type.Wall)).Count() > _neighbours)
+                if (NeighboursGetNineDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Tile.type.Equals(Tile.Type.Wall)).Count() > _neighbours)
                 {
                     _map.SetTile(tilePosition.x, tilePosition.y, new Tile(Tile.Type.Empty));
                 }
@@ -153,16 +153,16 @@ namespace TheDivineComedy.MapCreation
             for (int ctr = 0; ctr < 5; ctr++)
             {
                 //examine each cell individually
-                foreach (Tuple<Vector2Int, Tile> tile in _map.GetAllTiles())
+                foreach (TileData tileData in _map.GetAllTiles())
                 {
-                    if (IsBorderTile(tile))
+                    if (_map.IsBorderTile(tileData.Position))
                     {
                         continue;
                     }
 
-                    tilePosition = tile.Item1;
+                    tilePosition = tileData.Position;
 
-                    if (!_map.GetTile(tilePosition.x, tilePosition.y).Item2.type.Equals(Tile.Type.Wall) && NeighboursGetFourDirections(tilePosition).Where(position => _map.GetTile(position.x, position.y).Item2.type.Equals(Tile.Type.Wall)).Count() >= _emptyNeighbours)
+                    if (!_map.GetTile(tilePosition.x, tilePosition.y).Tile.type.Equals(Tile.Type.Wall) && NeighboursGetFourDirections(tilePosition).Where(position => _map.GetTile(position.x, position.y).Tile.type.Equals(Tile.Type.Wall)).Count() >= _emptyNeighbours)
                     {
                         _map.SetTile(tilePosition.x, tilePosition.y, new Tile(Tile.Type.Wall));
                     }
@@ -173,16 +173,16 @@ namespace TheDivineComedy.MapCreation
             //  fill in any empty cells that have 4 full neighbours
             //  to get rid of any holes in an cave
             //
-            foreach (Tuple<Vector2Int, Tile> tile in _map.GetAllTiles())
+            foreach (TileData tileData in _map.GetAllTiles())
             {
-                if (IsBorderTile(tile))
+                if (_map.IsBorderTile(tileData.Position))
                 {
                     continue;
                 }
 
-                tilePosition = tile.Item1;
+                tilePosition = tileData.Position;
 
-                if (_map.GetTile(tilePosition.x, tilePosition.y).Item2.type.Equals(Tile.Type.Wall) && NeighboursGetFourDirections(tilePosition).Where(postion => !_map.GetTile(postion.x, postion.y).Item2.type.Equals(Tile.Type.Wall)).Count() >= _emptyTileNeighbours)
+                if (_map.GetTile(tilePosition.x, tilePosition.y).Tile.type.Equals(Tile.Type.Wall) && NeighboursGetFourDirections(tilePosition).Where(postion => !_map.GetTile(postion.x, postion.y).Tile.type.Equals(Tile.Type.Wall)).Count() >= _emptyTileNeighbours)
                 {
                     _map.SetTile(tilePosition.x, tilePosition.y, new Tile(Tile.Type.Empty));
                 }
@@ -200,17 +200,17 @@ namespace TheDivineComedy.MapCreation
             Vector2Int tilePosition;
 
             //examine each cell in the map...
-            foreach (Tuple<Vector2Int, Tile> tile in _map.GetAllTiles())
+            foreach (TileData tileData in _map.GetAllTiles())
             {
-                if (IsBorderTile(tile))
+                if (_map.IsBorderTile(tileData.Position))
                 {
                     continue;
                 }
 
-                tilePosition = tile.Item1;
+                tilePosition = tileData.Position;
 
                 //if the cell is closed, and that cell doesn't occur in the list of caves..
-                if (!_map.GetTile(tilePosition.x, tilePosition.y).Item2.type.Equals(Tile.Type.Wall) && _caves.Count(s => s.Contains(tilePosition)) == 0)
+                if (!_map.GetTile(tilePosition.x, tilePosition.y).Tile.type.Equals(Tile.Type.Wall) && _caves.Count(s => s.Contains(tilePosition)) == 0)
                 {
                     cave = new List<Vector2Int>();
 
@@ -243,7 +243,7 @@ namespace TheDivineComedy.MapCreation
         /// <param name="current">List containing all the cells in the cave</param>
         private void LocateCave(Vector2Int tilePosition, List<Vector2Int> cave)
         {
-            foreach (Vector2Int p in NeighboursGetFourDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Item2.type.Equals(Tile.Type.Wall)))
+            foreach (Vector2Int p in NeighboursGetFourDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Tile.type.Equals(Tile.Type.Wall)))
             {
                 if (!cave.Contains(p))
                 {
@@ -377,7 +377,7 @@ namespace TheDivineComedy.MapCreation
                     {
                         break;
                     }
-                    else if (_map.GetTile(pCavePoint.x, pCavePoint.y).Item2.type.Equals(Tile.Type.Wall))
+                    else if (_map.GetTile(pCavePoint.x, pCavePoint.y).Tile.type.Equals(Tile.Type.Wall))
                     {
                         return;
                     }
@@ -406,7 +406,7 @@ namespace TheDivineComedy.MapCreation
                 {
                     if (TilePositionCheck(new Vector2Int(pLocation.x + p.x, pLocation.y + p.y)))
                     {
-                        if (_map.GetTile(pLocation.x + p.x, pLocation.y + p.y).Item2.type.Equals(Tile.Type.Wall))
+                        if (_map.GetTile(pLocation.x + p.x, pLocation.y + p.y).Tile.type.Equals(Tile.Type.Wall))
                         {
                             validdirections.Add(p);
                         }
@@ -450,7 +450,7 @@ namespace TheDivineComedy.MapCreation
                     //make a point and offset it
                     pStart += pDirection;
 
-                    if (TilePositionCheck(pStart) && !_map.GetTile(pStart.x, pStart.y).Item2.type.Equals(Tile.Type.Wall))
+                    if (TilePositionCheck(pStart) && !_map.GetTile(pStart.x, pStart.y).Tile.type.Equals(Tile.Type.Wall))
                     {
                         lPotentialCorridor.Add(pStart);
                         return lPotentialCorridor;
@@ -495,7 +495,7 @@ namespace TheDivineComedy.MapCreation
                 {
                     if (TilePositionCheck(new Vector2Int(pPoint.x + r, pPoint.y)))
                     {
-                        if (!_map.GetTile(pPoint.x + r, pPoint.y).Item2.type.Equals(Tile.Type.Wall))
+                        if (!_map.GetTile(pPoint.x + r, pPoint.y).Tile.type.Equals(Tile.Type.Wall))
                         {
                             return false;
                         }
@@ -505,7 +505,7 @@ namespace TheDivineComedy.MapCreation
                 {
                     if (TilePositionCheck(new Vector2Int(pPoint.x, pPoint.y + r)))
                     {
-                        if (!_map.GetTile(pPoint.x, pPoint.y + r).Item2.type.Equals(Tile.Type.Wall))
+                        if (!_map.GetTile(pPoint.x, pPoint.y + r).Tile.type.Equals(Tile.Type.Wall))
                         {
                             return false;
                         }
@@ -561,6 +561,10 @@ namespace TheDivineComedy.MapCreation
             return NewDir;
         }
 
+        /// <summary>
+        /// Return reverse direction
+        /// using north => south
+        /// </summary>
         private Vector2Int DirectionReverse(Vector2Int pDir)
         {
             return new Vector2Int(-pDir.x, -pDir.y);
@@ -579,8 +583,9 @@ namespace TheDivineComedy.MapCreation
         }
 
         /// <summary>
-        /// Return a list of the valid neighbouring cells of the provided point
-        /// using north, south, east, ne,nw,se,sw
+        /// Return a list of the valid neighbouring cells of the provided point        
+        /// using north, south, east, ne, nw, se, sw
+        /// </summary>
         private List<Vector2Int> NeighboursGetNineDirections(Vector2Int tilePosition)
         {
             return MapUtils.NineDirections.Select(direction => new Vector2Int(tilePosition.x + direction.x, tilePosition.y + direction.y)).Where(direction => TilePositionCheck(direction)).ToList();
@@ -593,13 +598,7 @@ namespace TheDivineComedy.MapCreation
         /// <returns></returns>
         private bool TilePositionCheck(Vector2Int tilePosition)
         {
-            return tilePosition.x >= 0 & tilePosition.x < _mapWidth & tilePosition.y >= 0 & tilePosition.y < _mapHeight;
-        }
-
-        private bool IsBorderTile(Tuple<Vector2Int, Tile> tile)
-        {
-            return tile.Item1.x == 0 || tile.Item1.x == _map.Width - 1
-                   || tile.Item1.y == 0 || tile.Item1.y == _map.Height - 1;
+            return tilePosition.x >= 0 & tilePosition.x < _width & tilePosition.y >= 0 & tilePosition.y < _height;
         }
     }
 }

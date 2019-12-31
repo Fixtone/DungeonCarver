@@ -32,14 +32,14 @@
             map.Initialize(_width, _height);
             map.Clear(new Tile(Tile.Type.Empty));
 
-            foreach (Tuple<Vector2Int, Tile> tile in map.GetTilesInRows(0, _height - 1))
+            foreach (TileData tileData in map.GetTilesInRows(0, _height - 1))
             {
-                map.SetTile(tile.Item1.x, tile.Item1.y, new Tile(Tile.Type.Wall));                
+                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));                
             }
 
-            foreach (Tuple<Vector2Int, Tile> tile in map.GetTilesInColumns(0, _width - 1))
+            foreach (TileData tileData in map.GetTilesInColumns(0, _width - 1))
             {
-                map.SetTile(tile.Item1.x, tile.Item1.y, new Tile(Tile.Type.Wall));
+                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));
             }
 
             return map;

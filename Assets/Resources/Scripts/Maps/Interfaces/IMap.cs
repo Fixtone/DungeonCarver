@@ -20,21 +20,21 @@
         /// </summary>
         void Clear(Tile tile);        
 
-        IEnumerable<Tuple<Vector2Int, Tile>> GetAllTiles();
+        IEnumerable<TileData> GetAllTiles();
 
         /// <summary>
         /// Get an IEnumerable of all the Tiles in the specified row numbers
         /// </summary>
         /// <param name="rowNumbers">Integer array of row numbers with 0 as the top</param>
         /// <returns>IEnumerable of all the Tiles in the specified row numbers</returns>
-        IEnumerable<Tuple<Vector2Int, Tile>> GetTilesInRows(params int[] rowNumbers);
+        IEnumerable<TileData> GetTilesInRows(params int[] rowNumbers);
 
         /// <summary>
         /// Get an IEnumerable of all the Tiles in the specified column numbers
         /// </summary>
         /// <param name="columnNumbers">Integer array of column numbers with 0 as the farthest left</param>
         /// <returns>IEnumerable of all the Tiles in the specified column numbers</returns>
-        IEnumerable<Tuple<Vector2Int, Tile>> GetTilesInColumns(params int[] columnNumbers);
+        IEnumerable<TileData> GetTilesInColumns(params int[] columnNumbers);
 
         /// <summary>
         /// Get an IEnumerable of Cells in a square area around the center Cell up to the specified distance
@@ -43,7 +43,7 @@
         /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
         /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
         /// <returns>IEnumerable of Cells in a square area around the center Cell</returns>
-        IEnumerable<Tuple<Vector2Int, Tile>> GetTilesInSquare(int xCenter, int yCenter, int distance);
+        IEnumerable<TileData> GetTilesInSquare(int xCenter, int yCenter, int distance);
 
         /// <summary>
         /// Get an IEnumerable of Cells in a line from the Origin Cell to the Destination Cell
@@ -55,7 +55,7 @@
         /// <param name="xDestination">X location of the Destination Cell at the end of the line with 0 as the farthest left</param>
         /// <param name="yDestination">Y location of the Destination Cell at the end of the line with 0 as the top</param>
         /// <returns>IEnumerable of Cells in a line from the Origin Cell to the Destination Cell which includes the Origin and Destination Cells</returns>
-        IEnumerable<Tuple<Vector2Int, Tile>> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination);
+        IEnumerable<TileData> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination);
 
         /// <summary>
         /// Get a Cell at the specified location
@@ -63,7 +63,7 @@
         /// <param name="x">X location of the Cell to get starting with 0 as the farthest left</param>
         /// <param name="y">Y location of the Cell to get, starting with 0 as the top</param>
         /// <returns>Cell at the specified location</returns>
-        Tuple<Vector2Int, Tile> GetTile(int x, int y);
+        TileData GetTile(int x, int y);
 
         void SetTile(int x, int y, Tile tile);
 
@@ -72,5 +72,11 @@
         /// </summary>
         /// <returns>T of type IMap which is a deep copy of the original Map</returns>
         T Clone<T>() where T : IMap, new();
+
+        bool IsBorderTile(Vector2Int position);
+
+        int ClampX(int x);
+
+        int ClampY(int y);
     }
 }

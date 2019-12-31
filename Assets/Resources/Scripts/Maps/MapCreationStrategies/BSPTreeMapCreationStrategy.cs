@@ -10,27 +10,22 @@ namespace TheDivineComedy.MapCreation
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class BSPTreeMapCreationStrategy<T> : IMapCreationStrategy<T> where T : class, IMap, new()
-    {
-        public int Width
+    {        
+        public int maxLeafSize
         {
             get; private set;
         }
-        public int Height
+        public int roomMaxSize
         {
             get; private set;
         }
-        public int MaxLeafSize
+        public int roomMinSize
         {
             get; private set;
         }
-        public int RoomMaxSize
-        {
-            get; private set;
-        }
-        public int RoomMinSize
-        {
-            get; private set;
-        }
+
+        private readonly int _width;
+        private readonly int _height;
 
         private T _map;
         private List<Leaf> _leafs = new List<Leaf>();
@@ -45,11 +40,11 @@ namespace TheDivineComedy.MapCreation
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
         public BSPTreeMapCreationStrategy(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize)
         {
-            Width = width;
-            Height = height;
-            MaxLeafSize = maxLeafSize;
-            RoomMaxSize = roomMaxSize;
-            RoomMinSize = roomMinSize;
+            _width = width;
+            _height = height;
+            this.maxLeafSize = maxLeafSize;
+            this.roomMaxSize = roomMaxSize;
+            this.roomMinSize = roomMinSize;
 
             _map = new T();
         }
@@ -65,7 +60,7 @@ namespace TheDivineComedy.MapCreation
         /// <returns>An IMap of the specified type</returns>
         public T CreateMap()
         {
-            _map.Initialize(Width, Height);
+            _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Wall));
 
             Leaf rootLeaf = new Leaf(0, 0, _map.Width, _map.Height);
@@ -80,15 +75,15 @@ namespace TheDivineComedy.MapCreation
 
                 for (int i = 0; i < _leafs.Count; i++)
                 {
-                    if (_leafs[i].ChildLeft == null && _leafs[i].ChildRight == null)
+                    if (_leafs[i].childLeft == null && _leafs[i].childRight == null)
                     {
-                        if ((_leafs[i].Width > MaxLeafSize) || (_leafs[i].Height > MaxLeafSize))
+                        if ((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize))
                         {
                             //Try to split the leaf
                             if (_leafs[i].SplitLeaf())
                             {
-                                _leafs.Add(_leafs[i].ChildLeft);
-                                _leafs.Add(_leafs[i].ChildRight);
+                                _leafs.Add(_leafs[i].childLeft);
+                                _leafs.Add(_leafs[i].childRight);
                                 splitSuccessfully = true;
                             }
                         }

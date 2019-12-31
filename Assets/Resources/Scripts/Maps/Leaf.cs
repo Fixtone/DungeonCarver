@@ -6,19 +6,19 @@
     public class Leaf
     {
         public const int MIN_LEAF_SIZE = 10;
-        public int Width
+        public int width
         {
             get; private set;
         }
-        public int Height
+        public int height
         {
             get; private set;
         }
-        public Leaf ChildLeft
+        public Leaf childLeft
         {
             get; private set;
         }
-        public Leaf ChildRight
+        public Leaf childRight
         {
             get; private set;
         }
@@ -31,15 +31,15 @@
 
         public Leaf(int x, int y, int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
+            this.width = width;
+            this.height = height;
             _x = x;
             _y = y;
         }
 
         public bool SplitLeaf()
         {
-            if (ChildLeft != null || ChildRight != null)
+            if (childLeft != null || childRight != null)
             {
                 return false;
             }
@@ -53,8 +53,8 @@
 
             bool splitHorizontally = Convert.ToBoolean(UnityEngine.Random.Range(0, 1));
 
-            float hotizontalFactor = (float)Width / Height;
-            float verticalFactor = (float)Height / Width;
+            float hotizontalFactor = (float)width / height;
+            float verticalFactor = (float)height / width;
 
             if (hotizontalFactor >= 1.25)
             {
@@ -68,11 +68,11 @@
             int max = 0;
             if (splitHorizontally)
             {
-                max = Height - MIN_LEAF_SIZE;
+                max = height - MIN_LEAF_SIZE;
             }
             else
             {
-                max = Width - MIN_LEAF_SIZE;
+                max = width - MIN_LEAF_SIZE;
             }
 
             if (max <= MIN_LEAF_SIZE)
@@ -84,13 +84,13 @@
 
             if (splitHorizontally)
             {
-                ChildLeft = new Leaf(_x, _y, Width, split);
-                ChildRight = new Leaf(_x, _y + split, Width, Height - split);
+                childLeft = new Leaf(_x, _y, width, split);
+                childRight = new Leaf(_x, _y + split, width, height - split);
             }
             else
             {
-                ChildLeft = new Leaf(_x, _y, split, Height);
-                ChildRight = new Leaf(_x + split, _y, Width - split, Height);
+                childLeft = new Leaf(_x, _y, split, height);
+                childRight = new Leaf(_x + split, _y, width - split, height);
             }
 
             return true;
@@ -98,30 +98,30 @@
 
         public void CreateRooms<T>(BSPTreeMapCreationStrategy<T> mapStrategy) where T : class, IMap, new()
         {
-            if (ChildLeft != null || ChildRight != null)
+            if (childLeft != null || childRight != null)
             {
                 //# recursively search for children until you hit the end of the branch
-                if (ChildLeft != null)
+                if (childLeft != null)
                 {
-                    ChildLeft.CreateRooms(mapStrategy);
+                    childLeft.CreateRooms(mapStrategy);
                 }
 
-                if (ChildRight != null)
+                if (childRight != null)
                 {
-                    ChildRight.CreateRooms(mapStrategy);
+                    childRight.CreateRooms(mapStrategy);
                 }
 
-                if (ChildLeft != null && ChildRight != null)
+                if (childLeft != null && childRight != null)
                 {
-                    mapStrategy.createHall(ChildLeft.GetRoom(), ChildRight.GetRoom());
+                    mapStrategy.createHall(childLeft.GetRoom(), childRight.GetRoom());
                 }
             }
             else
             {
-                int w = UnityEngine.Random.Range(mapStrategy.RoomMinSize, Math.Min(mapStrategy.MaxLeafSize, Width - 1));
-                int h = UnityEngine.Random.Range(mapStrategy.RoomMinSize, Math.Min(mapStrategy.MaxLeafSize, Height - 1));
-                int x = UnityEngine.Random.Range(_x, _x + (Width - 1) - w);
-                int y = UnityEngine.Random.Range(_y, _y + (Height - 1) - h);
+                int w = UnityEngine.Random.Range(mapStrategy.roomMinSize, Math.Min(mapStrategy.maxLeafSize, width - 1));
+                int h = UnityEngine.Random.Range(mapStrategy.roomMinSize, Math.Min(mapStrategy.maxLeafSize, height - 1));
+                int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
+                int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
 
                 _room = new Rect(x, y, w, h);
 
@@ -137,18 +137,18 @@
             }
             else
             {
-                if (ChildLeft != null)
+                if (childLeft != null)
                 {
-                    _room1 = ChildLeft.GetRoom();
+                    _room1 = childLeft.GetRoom();
                 }
 
-                if (ChildRight != null)
+                if (childRight != null)
                 {
-                    _room2 = ChildRight.GetRoom();
+                    _room2 = childRight.GetRoom();
                 }
             }
 
-            if (ChildLeft == null && ChildRight == null)
+            if (childLeft == null && childRight == null)
             {
                 return Rect.zero;
             }

@@ -10,7 +10,7 @@
     /// </summary>
     public class Map : IMap
     {
-        private Tile[,] mTerrain;
+        private TileData[,] mTerrain;
 
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -26,7 +26,7 @@
         {
             Width = width;
             Height = height;
-            mTerrain = new Tile[Width, Height];
+            mTerrain = new TileData[Width, Height];
         }
 
         public void Clear(Tile tile)
@@ -40,7 +40,7 @@
             }
         }        
 
-        public IEnumerable<Tuple<Vector2Int, Tile>> GetAllTiles()
+        public IEnumerable<TileData> GetAllTiles()
         {
             for (int y = 0; y < Height; y++)
             {
@@ -51,7 +51,7 @@
             }
         }
 
-        public IEnumerable<Tuple<Vector2Int, Tile>> GetTilesInRows(params int[] rowNumbers)
+        public IEnumerable<TileData> GetTilesInRows(params int[] rowNumbers)
         {
             foreach (int y in rowNumbers)
             {
@@ -62,7 +62,7 @@
             }
         }
 
-        public IEnumerable<Tuple<Vector2Int, Tile>> GetTilesInColumns(params int[] columnNumbers)
+        public IEnumerable<TileData> GetTilesInColumns(params int[] columnNumbers)
         {
             foreach (int x in columnNumbers)
             {
@@ -80,7 +80,7 @@
         /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
         /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
         /// <returns>IEnumerable of Cells in a square area around the center Cell</returns>
-        public IEnumerable<Tuple<Vector2Int, Tile>> GetTilesInSquare(int xCenter, int yCenter, int distance)
+        public IEnumerable<TileData> GetTilesInSquare(int xCenter, int yCenter, int distance)
         {
             int xMin = Math.Max(0, xCenter - distance);
             int xMax = Math.Min(Width - 1, xCenter + distance);
@@ -106,7 +106,7 @@
         /// <param name="xDestination">X location of the Destination Cell at the end of the line with 0 as the farthest left</param>
         /// <param name="yDestination">Y location of the Destination Cell at the end of the line with 0 as the top</param>
         /// <returns>IEnumerable of Cells in a line from the Origin Cell to the Destination Cell which includes the Origin and Destination Cells</returns>
-        public IEnumerable<Tuple<Vector2Int, Tile>> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
+        public IEnumerable<TileData> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
             xOrigin = ClampX(xOrigin);
             yOrigin = ClampY(yOrigin);
@@ -141,14 +141,14 @@
             }
         }
 
-        public Tuple<Vector2Int, Tile> GetTile(int x, int y)
+        public TileData GetTile(int x, int y)
         {
-            return new Tuple<Vector2Int, Tile>(new Vector2Int(x, y), mTerrain[x, y]);            
+            return mTerrain[x, y];
         }
 
         public void SetTile(int x, int y, Tile tile)
         {
-            mTerrain[x, y] = tile;
+            mTerrain[x, y] = new TileData(tile, new Vector2Int(x, y));
         }
 
         public static T Create<T>(MapCreation.IMapCreationStrategy<T> mapCreationStrategy) where T : IMap
@@ -169,22 +169,29 @@
         public virtual T Clone<T>() where T : IMap, new()
         {
             T map = Create(new MapCreation.BorderOnlyMapCreationStrategy<T>(Width, Height));
-            foreach (Tuple<Vector2Int, Tile> tile in GetAllTiles())
+            foreach (TileData tileData in GetAllTiles())
             {
-                map.SetTile(tile.Item1.x, tile.Item1.y, tile.Item2);
+                map.SetTile(tileData.Position.x, tileData.Position.y, tileData.Tile);
             }
 
             return map;
         }
 
-        private int ClampX(int x)
+        public virtual bool IsBorderTile(Vector2Int position)
+        {
+            return position.x == 0 || position.x == Width - 1 || position.y == 0 || position.y == Height - 1;
+        }
+
+        public virtual int ClampX(int x)
         {
             return (x < 0) ? 0 : (x > Width - 1) ? Width - 1 : x;
         }
 
-        private int ClampY(int y)
+        public virtual int ClampY(int y)
         {
             return (y < 0) ? 0 : (y > Height - 1) ? Height - 1 : y;
         }
+
+        
     }
 }
