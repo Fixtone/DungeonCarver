@@ -21,8 +21,11 @@
             //IMapGenerator<Map> mapCreationStrategy = new CaveMapGenerator<Map>(100, 100, 4, 50000, 45, 16, 500, 3, 4, 2, 10, 2, 5, 100000);
             //IMap map = Map.Create(mapCreationStrategy);
 
-            IMapGenerator<Map> mapcreationstrategy = new CellularAutomataGenerator<Map>(50, 50, 50, 4, 3);
-            IMap map = Map.Create(mapcreationstrategy);
+            //IMapGenerator<Map> mapcreationstrategy = new CellularAutomataGenerator<Map>(50, 50, 50, 4, 3);
+            //IMap map = Map.Create(mapcreationstrategy);
+
+            IMapGenerator<Map> mapCreationStrategy = new CityMapGenerator<Map>(50, 50, 30, 16, 8, new Vector2Int(1,1));
+            IMap map = Map.Create(mapCreationStrategy);
 
             for (int x = 0; x < map.Width; x ++)
             {

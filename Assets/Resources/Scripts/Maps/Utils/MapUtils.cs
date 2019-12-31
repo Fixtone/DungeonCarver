@@ -5,6 +5,14 @@
 
     public class MapUtils
     {
+        public enum CardinalFourDirections
+        {
+            NORTH = 0,
+            EAST = 1,
+            WEST = 2,
+            SOUTH = 3
+        }
+
         /// <summary>
         /// Generic list of points which contain 4 directions
         /// </summary>

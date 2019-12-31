@@ -129,6 +129,39 @@
             }
         }
 
+         public void CreateCityRooms<T>(CityMapGenerator<T> mapGenerator) where T : class, IMap, new()
+        {
+            if (childLeft != null || childRight != null)
+            {
+                //# recursively search for children until you hit the end of the branch
+                if (childLeft != null)
+                {
+                    childLeft.CreateCityRooms(mapGenerator);
+                }
+
+                if (childRight != null)
+                {
+                    childRight.CreateCityRooms(mapGenerator);
+                }
+
+                if (childLeft != null && childRight != null)
+                {                    
+                    mapGenerator.createHall(childLeft.GetRoom(), childRight.GetRoom());
+                }
+            }            
+            else
+            {
+                int w = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, width - 1));
+                int h = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, height - 1));
+                int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
+                int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
+
+                _room = new Rect(x, y, w, h);
+
+                mapGenerator.createRoom(_room);
+            }
+        }
+
         private Rect GetRoom()
         {
             if (_room != Rect.zero)
