@@ -1,4 +1,4 @@
-﻿namespace TheDivineComedy
+﻿namespace DungeonCarver
 {
     using UnityEngine;
 
@@ -12,17 +12,17 @@
         // Start is called before the first frame update
         void Start()
         {
-            //MapCreation.IMapCreationStrategy<Map> mapCreationStrategy = new MapCreation.BorderOnlyMapCreationStrategy<Map>(50, 50);
+            IMapGenerator<Map> mapCreationStrategy = new BorderOnlyMapGenerator<Map>(50, 50);
+            IMap map = Map.Create(mapCreationStrategy);
+
+            //IMapGenerator<Map> mapCreationStrategy = new BSPTreeMapGenerator<Map>(50, 50, 24, 15, 6);
             //IMap map = Map.Create(mapCreationStrategy);
 
-            //MapCreation.IMapCreationStrategy<Map> mapCreationStrategy = new MapCreation.BSPTreeMapCreationStrategy<Map>(50, 50, 24, 15, 6);
+            //IMapGenerator<Map> mapCreationStrategy = new CaveMapGenerator<Map>(100, 100, 4, 50000, 45, 16, 500, 3, 4, 2, 10, 2, 5, 100000);
             //IMap map = Map.Create(mapCreationStrategy);
 
-            //MapCreation.IMapCreationStrategy<Map> mapCreationStrategy = new MapCreation.CaveMapCreationStrategy<Map>(100, 100, 4, 50000, 45, 16, 500, 3, 4, 2, 10, 2, 5, 100000);
-            //IMap map = Map.Create(mapCreationStrategy);
-
-            MapCreation.IMapCreationStrategy<Map> mapcreationstrategy = new MapCreation.CellularAutomataMapStrategy<Map>(50, 50, 50, 3, 3);
-            IMap map = Map.Create(mapcreationstrategy);
+            //IMapGenerator<Map> mapcreationstrategy = new CellularAutomataGenerator<Map>(50, 50, 50, 3, 3);
+            //IMap map = Map.Create(mapcreationstrategy);
 
             for (int x = 0; x < map.Width; x ++)
             {

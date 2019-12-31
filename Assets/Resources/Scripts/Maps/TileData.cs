@@ -1,7 +1,5 @@
-﻿namespace TheDivineComedy
+﻿namespace DungeonCarver
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class TileData

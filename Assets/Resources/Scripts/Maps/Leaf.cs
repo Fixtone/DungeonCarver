@@ -1,4 +1,4 @@
-﻿namespace TheDivineComedy.MapCreation
+﻿namespace DungeonCarver
 {
     using System;
     using UnityEngine;
@@ -96,36 +96,36 @@
             return true;
         }
 
-        public void CreateRooms<T>(BSPTreeMapCreationStrategy<T> mapStrategy) where T : class, IMap, new()
+        public void CreateRooms<T>(BSPTreeMapGenerator<T> mapGenerator) where T : class, IMap, new()
         {
             if (childLeft != null || childRight != null)
             {
                 //# recursively search for children until you hit the end of the branch
                 if (childLeft != null)
                 {
-                    childLeft.CreateRooms(mapStrategy);
+                    childLeft.CreateRooms(mapGenerator);
                 }
 
                 if (childRight != null)
                 {
-                    childRight.CreateRooms(mapStrategy);
+                    childRight.CreateRooms(mapGenerator);
                 }
 
                 if (childLeft != null && childRight != null)
                 {
-                    mapStrategy.createHall(childLeft.GetRoom(), childRight.GetRoom());
+                    mapGenerator.createHall(childLeft.GetRoom(), childRight.GetRoom());
                 }
             }
             else
             {
-                int w = UnityEngine.Random.Range(mapStrategy.roomMinSize, Math.Min(mapStrategy.maxLeafSize, width - 1));
-                int h = UnityEngine.Random.Range(mapStrategy.roomMinSize, Math.Min(mapStrategy.maxLeafSize, height - 1));
+                int w = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, width - 1));
+                int h = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, height - 1));
                 int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
                 int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
 
                 _room = new Rect(x, y, w, h);
 
-                mapStrategy.createRoom(_room);
+                mapGenerator.createRoom(_room);
             }
         }
 

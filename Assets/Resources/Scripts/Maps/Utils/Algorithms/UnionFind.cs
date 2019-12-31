@@ -1,4 +1,4 @@
-﻿namespace TheDivineComedy.Algorithms
+﻿namespace DungeonCarver
 {
     using System;
 

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace TheDivineComedy.MapCreation
+﻿namespace DungeonCarver
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     /// The CaveMapCreationStrategy creates a Map of the specified type by using a cellular automata algorithm for creating a cave-like map.
     /// </summary>
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
-    public class BSPTreeMapCreationStrategy<T> : IMapCreationStrategy<T> where T : class, IMap, new()
+    public class BSPTreeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {        
         public int maxLeafSize
         {
@@ -38,7 +38,7 @@ namespace TheDivineComedy.MapCreation
         /// <param name="maxRooms">The maximum number of rooms that will exist in the generated Map</param>
         /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
-        public BSPTreeMapCreationStrategy(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize)
+        public BSPTreeMapGenerator(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize)
         {
             _width = width;
             _height = height;

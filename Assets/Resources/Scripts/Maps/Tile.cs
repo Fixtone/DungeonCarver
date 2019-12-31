@@ -1,7 +1,5 @@
-﻿namespace TheDivineComedy
+﻿namespace DungeonCarver
 {
-    using UnityEngine;
-
     /// <summary>
     /// Represents a single tile in the map
     /// </summary>

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace TheDivineComedy.MapCreation
+﻿namespace DungeonCarver
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using UnityEngine;
+
     /// <summary>
     /// The CaveMapCreationStrategy creates a Map of the specified type by using a cellular automata algorithm for creating a cave-like map.
     /// </summary>
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
-    public class CaveMapCreationStrategy<T> : IMapCreationStrategy<T> where T : class, IMap, new()
+    public class CaveMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
         private readonly int _width;
         private readonly int _height;
@@ -48,7 +47,7 @@ namespace TheDivineComedy.MapCreation
         /// <param name="totalIterations">Recommend int between 2 and 5. Number of times to execute the cellular automata algorithm.</param>
         /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>
         /// <param name="random">A class implementing IRandom that will be used to generate pseudo-random numbers necessary to create the Map</param>
-        public CaveMapCreationStrategy(int width, int height, int neighbours, int iterations, int closeTileProb, int lowerLimit, int upperLimit, int emptyNeighbours,
+        public CaveMapGenerator(int width, int height, int neighbours, int iterations, int closeTileProb, int lowerLimit, int upperLimit, int emptyNeighbours,
                                        int emptyTileNeighbours, int corridorSpace, int corridor_MaxTurns, int corridor_Min, int corridor_Max, int breakOut)
         {
             _width = width;

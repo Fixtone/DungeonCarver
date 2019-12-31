@@ -1,4 +1,4 @@
-﻿namespace TheDivineComedy
+﻿namespace DungeonCarver
 {
     using UnityEngine;
     using System;
@@ -151,7 +151,7 @@
             mTerrain[x, y] = new TileData(tile, new Vector2Int(x, y));
         }
 
-        public static T Create<T>(MapCreation.IMapCreationStrategy<T> mapCreationStrategy) where T : IMap
+        public static T Create<T>(IMapGenerator<T> mapCreationStrategy) where T : IMap
         {
             if (mapCreationStrategy == null)
             {
@@ -168,7 +168,7 @@
         /// <returns>T of type IMap which is a deep copy of the original Map</returns>
         public virtual T Clone<T>() where T : IMap, new()
         {
-            T map = Create(new MapCreation.BorderOnlyMapCreationStrategy<T>(Width, Height));
+            T map = Create(new BorderOnlyMapGenerator<T>(Width, Height));
             foreach (TileData tileData in GetAllTiles())
             {
                 map.SetTile(tileData.Position.x, tileData.Position.y, tileData.Tile);

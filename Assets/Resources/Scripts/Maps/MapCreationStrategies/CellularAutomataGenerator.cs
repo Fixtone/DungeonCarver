@@ -1,4 +1,4 @@
-﻿namespace TheDivineComedy.MapCreation
+﻿namespace DungeonCarver
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,7 @@
     /// </summary>
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
-    public class CellularAutomataMapStrategy<T> : IMapCreationStrategy<T> where T : class, IMap, new()
+    public class CellularAutomataGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
         private readonly int _width;
         private readonly int _height;
@@ -28,7 +28,7 @@
         /// <param name="fillProbability">Recommend int between 40 and 60. Percent chance that a given cell will be a floor when randomizing all cells.</param>
         /// <param name="totalIterations">Recommend int between 2 and 5. Number of times to execute the cellular automata algorithm.</param>
         /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>        
-        public CellularAutomataMapStrategy(int width, int height, int fillProbability, int totalIterations, int cutoffOfBigAreaFill)
+        public CellularAutomataGenerator(int width, int height, int fillProbability, int totalIterations, int cutoffOfBigAreaFill)
         {
             _width = width;
             _height = height;
@@ -158,7 +158,7 @@
         {
             var floodFillAnalyzer = new FloodFillAnalyzer(_map);
             List<MapSection> mapSections = floodFillAnalyzer.GetMapSections();
-            TheDivineComedy.Algorithms.UnionFind unionFind = new TheDivineComedy.Algorithms.UnionFind(mapSections.Count);
+            UnionFind unionFind = new UnionFind(mapSections.Count);
 
             while (unionFind.Count > 1)
             {
@@ -188,7 +188,7 @@
             }
         }
 
-        private static int FindNearestMapSection(IList<MapSection> mapSections, int mapSectionIndex, TheDivineComedy.Algorithms.UnionFind unionFind)
+        private static int FindNearestMapSection(IList<MapSection> mapSections, int mapSectionIndex, UnionFind unionFind)
         {
             MapSection start = mapSections[mapSectionIndex];
             int closestIndex = mapSectionIndex;
