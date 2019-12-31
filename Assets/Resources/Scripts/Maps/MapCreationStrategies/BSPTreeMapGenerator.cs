@@ -61,7 +61,7 @@
         public T CreateMap()
         {
             _map.Initialize(_width, _height);
-            _map.Clear(new Tile(Tile.Type.Wall));
+            _map.Clear(new Tile(Tile.Type.Block));
 
             Leaf rootLeaf = new Leaf(0, 0, _map.Width, _map.Height);
             _leafs.Add(rootLeaf);

@@ -50,7 +50,7 @@
         public T CreateMap()
         {
             _map.Initialize(_width, _height);
-            _map.Clear(new Tile(Tile.Type.Wall));
+            _map.Clear(new Tile(Tile.Type.Block));
 
             RandomlyFillCells();
 
@@ -77,7 +77,7 @@
             {
                 if (_map.IsBorderTile(tileData.Position))
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));                    
+                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
                 }
                 else if (UnityEngine.Random.Range(1, 100) < _fillProbability)
                 {
@@ -85,7 +85,7 @@
                 }
                 else
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));                    
+                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
                 }
             }
         }
@@ -102,7 +102,7 @@
                 }
                 if ((CountWallsNear(tileData, 1) >= 5) || (CountWallsNear(tileData, 2) <= 2))
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));                  
+                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                  
                 }
                 else
                 {
@@ -125,7 +125,7 @@
                 }
                 if (CountWallsNear(tileData, 1) >= 5)
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));                    
+                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
                 }
                 else
                 {
@@ -145,7 +145,7 @@
                 {
                     continue;
                 }
-                if (nearbyCell.Tile.type.Equals(Tile.Type.Wall))
+                if (nearbyCell.Tile.type.Equals(Tile.Type.Block))
                 {
                     count++;
                 }
@@ -264,7 +264,7 @@
                 while (stack.Count != 0)
                 {
                     tileData = stack.Pop();
-                    if (_visited[tileData.Position.y][tileData.Position.x] || tileData.Tile.Equals(Tile.Type.Wall))
+                    if (_visited[tileData.Position.y][tileData.Position.x] || tileData.Tile.Equals(Tile.Type.Block))
                     {
                         continue;
                     }

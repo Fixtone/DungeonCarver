@@ -31,12 +31,12 @@
 
             foreach (TileData tileData in map.GetTilesInRows(0, _height - 1))
             {
-                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));                
+                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                
             }
 
             foreach (TileData tileData in map.GetTilesInColumns(0, _width - 1))
             {
-                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Wall));
+                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
             }
 
             return map;

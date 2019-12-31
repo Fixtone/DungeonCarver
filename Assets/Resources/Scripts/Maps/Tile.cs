@@ -7,7 +7,7 @@
     {
         public enum Type
         {
-            Wall = 0,
+            Block = 0,
             Empty = 1
         }
 
