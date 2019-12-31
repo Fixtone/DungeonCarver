@@ -10,13 +10,28 @@ namespace TheDivineComedy.MapCreation
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class BSPTreeMapCreationStrategy<T> : IMapCreationStrategy<T> where T : class, IMap, new()
-    {        
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public int MaxLeafSize { get; private set; } 
-        public int RoomMaxSize { get; private set; } 
-        public int RoomMinSize { get; private set; } 
-        
+    {
+        public int Width
+        {
+            get; private set;
+        }
+        public int Height
+        {
+            get; private set;
+        }
+        public int MaxLeafSize
+        {
+            get; private set;
+        }
+        public int RoomMaxSize
+        {
+            get; private set;
+        }
+        public int RoomMinSize
+        {
+            get; private set;
+        }
+
         private T _map;
         private List<Leaf> _leafs = new List<Leaf>();
 
@@ -29,7 +44,7 @@ namespace TheDivineComedy.MapCreation
         /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
         public BSPTreeMapCreationStrategy(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize)
-        {   
+        {
             Width = width;
             Height = height;
             MaxLeafSize = maxLeafSize;
@@ -49,21 +64,21 @@ namespace TheDivineComedy.MapCreation
         /// </remarks>
         /// <returns>An IMap of the specified type</returns>
         public T CreateMap()
-        {            
+        {
             _map.Initialize(Width, Height);
-            _map.Clear(new Tile(true));
+            _map.Clear(new Tile(Tile.Type.Wall));
 
             Leaf rootLeaf = new Leaf(0, 0, _map.Width, _map.Height);
-		    _leafs.Add(rootLeaf);
+            _leafs.Add(rootLeaf);
 
             bool splitSuccessfully = true;
 
-		    //Loop through all leaves until they can no longer split successfully
+            //Loop through all leaves until they can no longer split successfully
             while (splitSuccessfully)
             {
                 splitSuccessfully = false;
 
-                for(int i = 0; i< _leafs.Count; i++)
+                for (int i = 0; i < _leafs.Count; i++)
                 {
                     if (_leafs[i].ChildLeft == null && _leafs[i].ChildRight == null)
                     {
@@ -73,14 +88,14 @@ namespace TheDivineComedy.MapCreation
                             if (_leafs[i].SplitLeaf())
                             {
                                 _leafs.Add(_leafs[i].ChildLeft);
-							    _leafs.Add(_leafs[i].ChildRight);
+                                _leafs.Add(_leafs[i].ChildRight);
                                 splitSuccessfully = true;
                             }
                         }
                     }
                 }
             }
-		    
+
             rootLeaf.CreateRooms<T>(this);
 
             return _map;
@@ -92,7 +107,7 @@ namespace TheDivineComedy.MapCreation
             {
                 for (int y = (int)room.y + 1; y < room.max.y; y++)
                 {
-                    _map.SetTile(new Vector2Int(x, y), new Tile(false));
+                    _map.SetTile(x, y, new Tile(Tile.Type.Empty));
                 }
             }
         }
@@ -121,7 +136,7 @@ namespace TheDivineComedy.MapCreation
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                _map.SetTile(new Vector2Int(x, yPosition), new Tile(false));
+                _map.SetTile(x, yPosition, new Tile(Tile.Type.Empty));
             }
         }
 
@@ -129,7 +144,7 @@ namespace TheDivineComedy.MapCreation
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                _map.SetTile(new Vector2Int(xPosition, y), new Tile(false));
+                _map.SetTile(xPosition, y, new Tile(Tile.Type.Empty));
             }
         }
     }

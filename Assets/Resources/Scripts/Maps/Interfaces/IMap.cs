@@ -18,9 +18,7 @@
         /// <summary>
         /// Sets the properties of all Tiles in the Map to be transparent and walkable
         /// </summary>
-        void Clear();
-        void Clear(Tile tile);
-        void SetTile(Vector2Int pos, Tile tile);
+        void Clear(Tile tile);        
 
         IEnumerable<Tuple<Vector2Int, Tile>> GetAllTiles();
 
@@ -66,6 +64,8 @@
         /// <param name="y">Y location of the Cell to get, starting with 0 as the top</param>
         /// <returns>Cell at the specified location</returns>
         Tuple<Vector2Int, Tile> GetTile(int x, int y);
+
+        void SetTile(int x, int y, Tile tile);
 
         /// <summary>
         /// Create and return a deep copy of an existing Map

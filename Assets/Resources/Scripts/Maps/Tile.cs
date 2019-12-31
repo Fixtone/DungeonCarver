@@ -6,12 +6,18 @@
     /// Represents a single tile in the map
     /// </summary>
     public class Tile
-    {        
-        public bool blocked;
-
-        public Tile(bool blocked)
+    {
+        public enum Type
         {
-            this.blocked = blocked;
+            Wall = 0,
+            Empty = 1
+        }
+
+        public Type type;
+
+        public Tile(Type type)
+        {
+            this.type = type;
         }
     }
 }

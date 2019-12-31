@@ -21,13 +21,6 @@
         public Map()
         {
         }
-                
-        public Map(int width, int height)
-        {
-            Width = width;
-            Height = height;
-            mTerrain = new Tile[Width, Height];
-        }
 
         public void Initialize(int width, int height)
         {
@@ -36,32 +29,16 @@
             mTerrain = new Tile[Width, Height];
         }
 
-        public void Clear()
-        {
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    SetTile(new Vector2Int(x,y), new Tile(true));
-                }
-            }
-        }
-
         public void Clear(Tile tile)
         {
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    SetTile(new Vector2Int(x, y), tile);
+                    SetTile(x, y, tile);
                 }
             }
-        }
-
-        public void SetTile(Vector2Int pos, Tile tile)
-        {
-            mTerrain[pos.x, pos.y] = tile;
-        }
+        }        
 
         public IEnumerable<Tuple<Vector2Int, Tile>> GetAllTiles()
         {
@@ -169,6 +146,11 @@
             return new Tuple<Vector2Int, Tile>(new Vector2Int(x, y), mTerrain[x, y]);            
         }
 
+        public void SetTile(int x, int y, Tile tile)
+        {
+            mTerrain[x, y] = tile;
+        }
+
         public static T Create<T>(MapCreation.IMapCreationStrategy<T> mapCreationStrategy) where T : IMap
         {
             if (mapCreationStrategy == null)
@@ -189,8 +171,7 @@
             T map = Create(new MapCreation.BorderOnlyMapCreationStrategy<T>(Width, Height));
             foreach (Tuple<Vector2Int, Tile> tile in GetAllTiles())
             {
-                map.SetTile(new Vector2Int(tile.Item1.x, tile.Item1.y), tile.Item2);
-                //map.SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, cell.IsExplored);
+                map.SetTile(tile.Item1.x, tile.Item1.y, tile.Item2);
             }
 
             return map;
