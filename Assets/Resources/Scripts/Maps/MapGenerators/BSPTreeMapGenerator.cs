@@ -26,6 +26,7 @@
 
         private readonly int _width;
         private readonly int _height;
+        private readonly int _minLeafSize;
         private System.Random _random;
 
         private T _map;
@@ -39,10 +40,11 @@
         /// <param name="maxRooms">The maximum number of rooms that will exist in the generated Map</param>
         /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
-        public BSPTreeMapGenerator(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize, System.Random random)
+        public BSPTreeMapGenerator(int width, int height, int maxLeafSize, int minLeafSize, int roomMaxSize, int roomMinSize, System.Random random)
         {
             _width = width;
             _height = height;
+            _minLeafSize = minLeafSize;
             _random = random;
 
             this.maxLeafSize = maxLeafSize;
@@ -83,7 +85,7 @@
                         if ((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize))
                         {
                             //Try to split the leaf
-                            if (_leafs[i].SplitLeaf())
+                            if (_leafs[i].SplitLeaf(_minLeafSize))
                             {
                                 _leafs.Add(_leafs[i].childLeft);
                                 _leafs.Add(_leafs[i].childRight);

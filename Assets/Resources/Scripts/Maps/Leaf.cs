@@ -5,7 +5,6 @@
 
     public class Leaf
     {
-        public const int MIN_LEAF_SIZE = 10;
         public int width
         {
             get; private set;
@@ -39,7 +38,7 @@
             _random = random;
         }
 
-        public bool SplitLeaf()
+        public bool SplitLeaf(int minLeafSize)
         {
             if (childLeft != null || childRight != null)
             {
@@ -70,19 +69,19 @@
             int max = 0;
             if (splitHorizontally)
             {
-                max = height - MIN_LEAF_SIZE;
+                max = height - minLeafSize;
             }
             else
             {
-                max = width - MIN_LEAF_SIZE;
+                max = width - minLeafSize;
             }
 
-            if (max <= MIN_LEAF_SIZE)
+            if (max <= minLeafSize)
             {
                 return false;
             }
 
-            int split = UnityEngine.Random.Range(MIN_LEAF_SIZE, max);
+            int split = _random.Next(minLeafSize, max);
 
             if (splitHorizontally)
             {
@@ -124,7 +123,7 @@
                 int h = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, height - 1));
                 int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
                 int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
-
+            
                 _room = new Rect(x, y, w, h);
 
                 mapGenerator.createRoom(_room);
@@ -157,7 +156,7 @@
                 int h = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, height - 1));
                 int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
                 int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
-
+                
                 _room = new Rect(x, y, w, h);
 
                 mapGenerator.createRoom(_room);

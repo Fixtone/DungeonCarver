@@ -154,10 +154,11 @@ MonoBehaviour:
     type: 3}
   wall: {fileID: 4616963417848960836, guid: b6517e4a4dfb09446ad88daafb06c655, type: 3}
   empty: {fileID: 6583950616433472553, guid: b6517e4a4dfb09446ad88daafb06c655, type: 3}
-  generator: 4
-  mapWidth: 50
-  mapHeight: 50
+  generator: 6
+  mapWidth: 80
+  mapHeight: 80
   maxLeafSize: 24
+  minLeafSize: 10
   roomMaxSize: 15
   roomMinSize: 6
   neighbours: 4
@@ -176,9 +177,16 @@ MonoBehaviour:
   totalIterations: 3
   cutoffOfBigAreaFill: 3
   maxCityLeafSize: 30
-  roomMaxCitySize: 16
-  roomMinCitySize: 8
-  cityInsets: {x: 1, y: 1}
+  minCityLeafSize: 8
+  roomMaxCitySize: 8
+  roomMinCitySize: 4
+  percentGoal: 0.3
+  walkIterations: 50000
+  weightedTowardCenter: 0.15
+  weightedTowardPreviousDirection: 0.5
+  maxTunnelingRooms: 30
+  roomMaxTunnelingSize: 15
+  roomMinTunnelingSize: 6
 --- !u!4 &387012854
 Transform:
   m_ObjectHideFlags: 0

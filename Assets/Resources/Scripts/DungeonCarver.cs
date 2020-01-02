@@ -23,6 +23,8 @@
         [HideInInspector]
         public int maxLeafSize = 24;
         [HideInInspector]
+        public int minLeafSize = 10;
+        [HideInInspector]
         public int roomMaxSize = 15;
         [HideInInspector]
         public int roomMinSize = 6;
@@ -65,11 +67,11 @@
         [HideInInspector]
         public int maxCityLeafSize = 30;
         [HideInInspector]
+        public int minCityLeafSize = 8;
+        [HideInInspector]
         public int roomMaxCitySize = 16;
         [HideInInspector]
         public int roomMinCitySize = 8;
-        [HideInInspector]
-        public Vector2Int cityInsets = new Vector2Int(1, 1);
 
         //Drunkards Walk
         [HideInInspector]
@@ -107,7 +109,7 @@
                     }
                 case Generators.BSPTreeMapGenerator:
                     {
-                        mapGenerator = new BSPTreeMapGenerator<Map>(mapWidth, mapHeight, maxLeafSize, roomMaxSize, roomMinSize, random);
+                        mapGenerator = new BSPTreeMapGenerator<Map>(mapWidth, mapHeight, maxLeafSize, minLeafSize, roomMaxSize, roomMinSize, random);
                         _map = Map.Create(mapGenerator);
                         break;
                     }
@@ -125,7 +127,7 @@
                     }
                 case Generators.CityMapGenerator:
                     {
-                        mapGenerator = new CityMapGenerator<Map>(mapWidth, mapHeight, maxCityLeafSize, roomMaxCitySize, roomMinCitySize, cityInsets, random);
+                        mapGenerator = new CityMapGenerator<Map>(mapWidth, mapHeight, maxCityLeafSize, minCityLeafSize, roomMaxCitySize, roomMinCitySize, random);
                         _map = Map.Create(mapGenerator);
                         break;
                     }

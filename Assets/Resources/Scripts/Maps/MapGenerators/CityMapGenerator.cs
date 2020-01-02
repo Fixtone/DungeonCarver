@@ -27,7 +27,7 @@
 
         private readonly int _mapWidth;
         private readonly int _mapHeight;
-        private readonly Vector2Int _inset;
+        private readonly int _minLeafSize;
         private readonly System.Random _random;
 
         private List<Leaf> _leafs = new List<Leaf>();
@@ -39,11 +39,11 @@
         /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
-        public CityMapGenerator(int mapWidth, int mapHeight, int maxLeafSize, int roomMaxSize, int roomMinSize, Vector2Int inset, System.Random random)
+        public CityMapGenerator(int mapWidth, int mapHeight, int maxLeafSize, int minLeafSize, int roomMaxSize, int roomMinSize, System.Random random)
         {
             _mapWidth = mapWidth;
             _mapHeight = mapHeight;
-            _inset = inset;
+            _minLeafSize = minLeafSize;
             _random = random;
 
             this.maxLeafSize = maxLeafSize;
@@ -63,7 +63,7 @@
 
             _leafs = new List<Leaf>();
 
-            Leaf rootLeaf = new Leaf(_inset.x, _inset.y, _mapWidth - _inset.x, _mapHeight - _inset.y, _random);
+            Leaf rootLeaf = new Leaf(1, 1, _mapWidth - 1, _mapHeight - 1, _random);
 
             _leafs.Add(rootLeaf);
 
@@ -80,7 +80,7 @@
                         if ((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize) || (UnityEngine.Random.Range(0.0f, 1.0f) > 0.8f))
                         {
                             //Try to split the leaf
-                            if (_leafs[i].SplitLeaf())
+                            if (_leafs[i].SplitLeaf(_minLeafSize))
                             {
                                 _leafs.Add(_leafs[i].childLeft);
                                 _leafs.Add(_leafs[i].childRight);
@@ -100,6 +100,7 @@
         public void createRoom(Rect room)
         {
             _rooms.Add(room);
+            Debug.Log(room.max.x + "/" + room.max.y  + "#" + room.x + "/" + room.y);
 
             //Build Walls
             //set all tiles within a rectangle to 1
@@ -122,11 +123,6 @@
 
         public void createHall(Rect room1, Rect room2)
         {
-            //This method actually creates a list of rooms,
-            //but since it is called from an outside class that is also
-            //used by other dungeon Generators, it was simpler to 
-            //repurpose the createHall method that to alter the leaf class.
-
             if (_rooms.Find(item => item.Equals(room1)) == null)
             {
                 _rooms.Add(room1);
@@ -167,7 +163,7 @@
                         }
                     case MapUtils.CardinalFourDirections.WEST:
                         {
-                            doorPosition = new Vector2Int((int)room.max.x, roomCenter.y);
+                            doorPosition = new Vector2Int((int)room.max.x,  roomCenter.y);
                             break;
                         }
                 }

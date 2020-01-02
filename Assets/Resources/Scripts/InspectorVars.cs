@@ -40,6 +40,7 @@ namespace DungeonCarver
                 case Generators.BSPTreeMapGenerator:
                     {
                         _script.maxLeafSize = EditorGUILayout.IntField("Max Leaf Size:", _script.maxLeafSize);
+                        _script.minLeafSize = EditorGUILayout.IntField("Min Leaf Size:", _script.minLeafSize);
                         _script.roomMaxSize = EditorGUILayout.IntField("Room Max Size:", _script.roomMaxSize);
                         _script.roomMinSize = EditorGUILayout.IntField("Room Min Size:", _script.roomMinSize);
                         break;
@@ -73,9 +74,9 @@ namespace DungeonCarver
                 case Generators.CityMapGenerator:
                     {
                         _script.maxCityLeafSize = EditorGUILayout.IntField("Max Leaf Size:", _script.maxCityLeafSize);
+                        _script.minCityLeafSize = EditorGUILayout.IntField("Min Leaf Size:", _script.minCityLeafSize);
                         _script.roomMaxCitySize = EditorGUILayout.IntField("Room Max Size:", _script.roomMaxCitySize);
                         _script.roomMinCitySize = EditorGUILayout.IntField("Room Min Size:", _script.roomMinCitySize);
-                        _script.cityInsets = EditorGUILayout.Vector2IntField("Insets:", _script.cityInsets);
                         break;
                     }
                 case Generators.DrunkardsWalkMapGenerator:
