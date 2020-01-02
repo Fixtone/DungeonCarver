@@ -18,7 +18,7 @@ lenguajes or other engines.
 
 
 ## License 
-* see [LICENSE](https://github.com/Fixtone/DungeonCarver/blob/master/LICENSE.md) file
+* see [LICENSE](https://github.com/Fixtone/DungeonCarver/blob/master/LICENSE) file
 
 ## Version 
 * Version 0.1
