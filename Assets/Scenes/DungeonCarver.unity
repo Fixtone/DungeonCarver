@@ -154,9 +154,9 @@ MonoBehaviour:
     type: 3}
   wall: {fileID: 4616963417848960836, guid: b6517e4a4dfb09446ad88daafb06c655, type: 3}
   empty: {fileID: 6583950616433472553, guid: b6517e4a4dfb09446ad88daafb06c655, type: 3}
-  generator: 1
-  mapWidth: 50
-  mapHeight: 50
+  generator: 2
+  mapWidth: 80
+  mapHeight: 80
   maxLeafSize: 24
   minLeafSize: 10
   roomMaxSize: 14
@@ -184,6 +184,7 @@ MonoBehaviour:
   walkIterations: 50000
   weightedTowardCenter: 0.15
   weightedTowardPreviousDirection: 0.5
+  magicNumber: 666
   maxTunnelingRooms: 30
   roomMaxTunnelingSize: 15
   roomMinTunnelingSize: 6
