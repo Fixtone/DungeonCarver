@@ -25,7 +25,7 @@
         private T _map;
 
         /// <summary>
-        /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
+        /// 
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
         public TunnelingMazeMapGenerator(int width, int height, int magicNumber, System.Random random)

@@ -5,7 +5,7 @@
     using UnityEngine;
 
     /// <summary>
-    /// The RandomRoomsMapCreationStrategy creates a Map of the specified type by placing rooms randomly and then connecting them with cooridors
+    ///
     /// </summary>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class TunnelingWithRoomsMapGenerator<T> : IMapGenerator<T> where T : IMap, new()
@@ -20,7 +20,7 @@
         private T _map;
 
         /// <summary>
-        /// Constructs a new RandomRoomsMapCreationStrategy with the specified parameters
+        /// 
         /// </summary>
         /// <param name="width">The width of the Map to be created</param>
         /// <param name="height">The height of the Map to be created</param>
