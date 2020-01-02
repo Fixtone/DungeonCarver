@@ -10,17 +10,17 @@
     /// </summary>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class TunnelingMazeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
-    {
-        private const int MAGIC = 666;
-        private const int CELL_R = 2;
+    {  
+        private const int _jumpTile = 2;
 
         private readonly int _width;
         private readonly int _height;
-        private readonly int _maxCellWidth;
-        private readonly int _maxCellHeight;
+        private readonly int _maxTileWidth;
+        private readonly int _maxTileHeight;
+        private readonly int _magicNumber;
         private readonly System.Random _random;
 
-        private int[,] _cell;
+        private int[,] _tiles;
 
         private T _map;
 
@@ -28,15 +28,16 @@
         /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
-        public TunnelingMazeMapGenerator(int width, int height, System.Random random)
+        public TunnelingMazeMapGenerator(int width, int height, int magicNumber, System.Random random)
         {
             _width = width;
             _height = height;
-            _maxCellWidth = (width / CELL_R);
-            _maxCellHeight = (height / CELL_R);
+            _magicNumber = magicNumber;
+            _maxTileWidth = (width / _jumpTile);
+            _maxTileHeight = (height / _jumpTile);
             _random = random;
 
-            _cell = new int[_maxCellWidth, _maxCellHeight];
+            _tiles = new int[_maxTileWidth, _maxTileHeight];
         }
 
         /// <summary>
@@ -53,31 +54,31 @@
             int ry = 0;
             int count = 0;
 
-            int totalCells = _maxCellWidth * _maxCellHeight;
-            rx = _maxCellWidth / 2;
-            ry = _maxCellHeight / 2;
+            int totalCells = _maxTileWidth * _maxTileHeight;
+            rx = _maxTileWidth / 2;
+            ry = _maxTileHeight / 2;
 
-            _cell[rx, ry] = 1;
+            _tiles[rx, ry] = 1;
 
             int visitedCells = 1;
 
             while (visitedCells < totalCells)
             {
                 count++;
-                if (count < MAGIC)
+                if (count < _magicNumber)
                 {
                     FillCells();
                 }
 
                 // Use Direction Lookup table for more Generic dig function.
                 Vector2Int direction = MapUtils.FourDirections[_random.Next(0, MapUtils.FourDirections.Count)];
-                bool isInRange = IsInRange(rx * CELL_R + direction.x, ry * CELL_R + direction.y);
+                bool isInRange = IsInRange(rx * _jumpTile + direction.x, ry * _jumpTile + direction.y);
 
                 int x = rx + direction.x;
                 int y = ry + direction.y;
-                if (isInRange && _cell[rx + direction.x, ry + direction.y] == 0 || UnityEngine.Random.Range(0, 6) == 6)
+                if (isInRange && _tiles[rx + direction.x, ry + direction.y] == 0)
                 {
-                    LinkCells(rx * CELL_R, ry * CELL_R, (rx + direction.x) * CELL_R, (ry + direction.y) * CELL_R);
+                    LinkCells(rx * _jumpTile, ry * _jumpTile, (rx + direction.x) * _jumpTile, (ry + direction.y) * _jumpTile);
                     rx += direction.x;
                     ry += direction.y;
                 }
@@ -85,14 +86,14 @@
                 {
                     do
                     {
-                        rx = _random.Next(0, _maxCellWidth);
-                        ry = _random.Next(0, _maxCellHeight);
+                        rx = _random.Next(0, _maxTileWidth);
+                        ry = _random.Next(0, _maxTileHeight);
                     }
-                    while (_cell[rx, ry] != 1);
+                    while (_tiles[rx, ry] != 1);
                 }
 
-                _cell[rx, ry] = 1;
-                _map.SetTile(rx * CELL_R, ry * CELL_R, new Tile(Tile.Type.Empty));
+                _tiles[rx, ry] = 1;
+                _map.SetTile(rx * _jumpTile, ry * _jumpTile, new Tile(Tile.Type.Empty));
 
                 visitedCells++;
             }
@@ -102,13 +103,13 @@
 
         private void FillCells()
         {
-            for (int i = 0; i < _maxCellWidth; i++)
+            for (int i = 0; i < _maxTileWidth; i++)
             {
-                for (int j = 0; j < _maxCellHeight; j++)
+                for (int j = 0; j < _maxTileHeight; j++)
                 {
-                    if (_cell[i, j] == 1)
+                    if (_tiles[i, j] == 1)
                     {
-                        _map.SetTile(i * CELL_R, j * CELL_R, new Tile(Tile.Type.Empty));
+                        _map.SetTile(i * _jumpTile, j * _jumpTile, new Tile(Tile.Type.Empty));
                     }
                 }
             }
@@ -117,39 +118,39 @@
         // Links our Cells
         void LinkCells(int x0, int y0, int x1, int y1)
         {
-            int cx = x0;
-            int cy = y0;
-            while (cx != x1)
+            int tileX = x0;
+            int tileY = y0;
+            while (tileX != x1)
             {
                 if (x0 > x1)
                 {
-                    cx--;
+                    tileX--;
                 }
                 else
                 {
-                    cx++;
+                    tileX++;
                 }
 
-                if (IsInRange(cx, cy))
+                if (IsInRange(tileX, tileY))
                 {
-                    _map.SetTile(cx, cy, new Tile(Tile.Type.Empty));
+                    _map.SetTile(tileX, tileY, new Tile(Tile.Type.Empty));
                 }
             }
 
-            while (cy != y1)
+            while (tileY != y1)
             {
                 if (y0 > y1)
                 {
-                    cy--;
+                    tileY--;
                 }
                 else
                 {
-                    cy++;
+                    tileY++;
                 }
 
-                if (IsInRange(cx, cy))
+                if (IsInRange(tileX, tileY))
                 {
-                    _map.SetTile(cx, cy, new Tile(Tile.Type.Empty));
+                    _map.SetTile(tileX, tileY, new Tile(Tile.Type.Empty));
                 }
             }
         }

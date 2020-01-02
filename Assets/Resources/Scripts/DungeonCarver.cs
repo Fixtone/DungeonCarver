@@ -82,6 +82,10 @@
         [HideInInspector]
         public float weightedTowardPreviousDirection = 0.7f;
 
+        //Tunneling Maze With Rooms
+        [HideInInspector]
+        public int magicNumber = 666;
+
         //Tunneling With Rooms
         [HideInInspector]
         public int maxTunnelingRooms = 30;
@@ -144,7 +148,7 @@
                     }
                 case Generators.TunnelingMazeMapGenerator:
                     {
-                        mapGenerator = new TunnelingMazeMapGenerator<Map>(mapWidth, mapHeight, random);
+                        mapGenerator = new TunnelingMazeMapGenerator<Map>(mapWidth, mapHeight, magicNumber, random);
                         _map = Map.Create(mapGenerator);
                         break;
                     }

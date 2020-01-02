@@ -119,10 +119,10 @@
             }
             else
             {
-                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafWidth - 1));
-                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafHeight - 1));
-                int x = UnityEngine.Random.Range(_x, _x + (leafWidth - 1) - w);
-                int y = UnityEngine.Random.Range(_y, _y + (leafHeight - 1) - h);
+                int w = _random.Next(roomMinSize, Math.Min(roomMaxSize, leafWidth - 1));
+                int h = _random.Next(roomMinSize, Math.Min(roomMaxSize, leafHeight - 1));
+                int x = _random.Next(_x, _x + (leafWidth - 1) - w);
+                int y = _random.Next(_y, _y + (leafHeight - 1) - h);
             
                 _room = new Rect(x, y, w, h);
 
@@ -152,10 +152,10 @@
             }
             else
             {
-                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafWidth - 1));
-                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafHeight - 1));
-                int x = UnityEngine.Random.Range(_x, _x + (leafWidth - 1) - w);
-                int y = UnityEngine.Random.Range(_y, _y + (leafHeight - 1) - h);
+                int w = _random.Next(roomMinSize, Math.Min(roomMaxSize, leafWidth - 1));
+                int h = _random.Next(roomMinSize, Math.Min(roomMaxSize, leafHeight - 1));
+                int x = _random.Next(_x, _x + (leafWidth - 1) - w);
+                int y = _random.Next(_y, _y + (leafHeight - 1) - h);
                 
                 _room = new Rect(x, y, w, h);
 

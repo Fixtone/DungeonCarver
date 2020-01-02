@@ -87,6 +87,11 @@ namespace DungeonCarver
                         _script.weightedTowardPreviousDirection = EditorGUILayout.FloatField("Weighted Toward Previous Direction:", _script.weightedTowardPreviousDirection);
                         break;
                     }
+                    case Generators.TunnelingMazeMapGenerator:
+                    {
+                        _script.magicNumber = EditorGUILayout.IntField("Magic Number:", _script.magicNumber);
+                        break;
+                    }
                 case Generators.TunnelingWithRoomsMapGenerator:
                     {
                         _script.maxTunnelingRooms = EditorGUILayout.IntField("Max Rooms:", _script.maxTunnelingRooms);
