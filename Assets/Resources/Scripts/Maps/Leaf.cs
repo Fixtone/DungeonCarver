@@ -5,19 +5,19 @@
 
     public class Leaf
     {
-        public int width
+        public int leafWidth
         {
             get; private set;
         }
-        public int height
+        public int leafHeight
         {
             get; private set;
         }
-        public Leaf childLeft
+        public Leaf childLeafLeft
         {
             get; private set;
         }
-        public Leaf childRight
+        public Leaf childLeafRight
         {
             get; private set;
         }
@@ -29,10 +29,10 @@
         private Rect _room1;
         private Rect _room2;
 
-        public Leaf(int x, int y, int width, int height, System.Random random)
+        public Leaf(int x, int y, int leafWidth, int leafHeight, System.Random random)
         {
-            this.width = width;
-            this.height = height;
+            this.leafWidth = leafWidth;
+            this.leafHeight = leafHeight;
             _x = x;
             _y = y;
             _random = random;
@@ -40,22 +40,22 @@
 
         public bool SplitLeaf(int minLeafSize)
         {
-            if (childLeft != null || childRight != null)
+            if (childLeafLeft != null || childLeafRight != null)
             {
                 return false;
             }
 
             //==== Determine the direction of the split ====
-            //If the width of the leaf is >25% larger than the height,
+            //If the leafWidth of the leaf is >25% larger than the leafHeight,
             //split the leaf vertically.
-            //If the height of the leaf is >25 larger than the width,
+            //If the leafHeight of the leaf is >25 larger than the leafWidth,
             //split the leaf horizontally.
             //Otherwise, choose the direction at random.
 
             bool splitHorizontally = Convert.ToBoolean(_random.Next(0, 2));
 
-            float hotizontalFactor = (float)width / height;
-            float verticalFactor = (float)height / width;
+            float hotizontalFactor = (float)leafWidth / leafHeight;
+            float verticalFactor = (float)leafHeight / leafWidth;
 
             if (hotizontalFactor >= 1.25)
             {
@@ -69,11 +69,11 @@
             int max = 0;
             if (splitHorizontally)
             {
-                max = height - minLeafSize;
+                max = leafHeight - minLeafSize;
             }
             else
             {
-                max = width - minLeafSize;
+                max = leafWidth - minLeafSize;
             }
 
             if (max <= minLeafSize)
@@ -85,13 +85,13 @@
 
             if (splitHorizontally)
             {
-                childLeft = new Leaf(_x, _y, width, split, _random);
-                childRight = new Leaf(_x, _y + split, width, height - split, _random);
+                childLeafLeft = new Leaf(_x, _y, leafWidth, split, _random);
+                childLeafRight = new Leaf(_x, _y + split, leafWidth, leafHeight - split, _random);
             }
             else
             {
-                childLeft = new Leaf(_x, _y, split, height, _random);
-                childRight = new Leaf(_x + split, _y, width - split, height, _random);
+                childLeafLeft = new Leaf(_x, _y, split, leafHeight, _random);
+                childLeafRight = new Leaf(_x + split, _y, leafWidth - split, leafHeight, _random);
             }
 
             return true;
@@ -99,30 +99,30 @@
 
         public void CreateRooms<T>(BSPTreeMapGenerator<T> mapGenerator, int maxLeafSize, int roomMaxSize, int roomMinSize) where T : class, IMap, new()
         {
-            if (childLeft != null || childRight != null)
+            if (childLeafLeft != null || childLeafRight != null)
             {
                 //# recursively search for children until you hit the end of the branch
-                if (childLeft != null)
+                if (childLeafLeft != null)
                 {
-                    childLeft.CreateRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
+                    childLeafLeft.CreateRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
-                if (childRight != null)
+                if (childLeafRight != null)
                 {
-                    childRight.CreateRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
+                    childLeafRight.CreateRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
-                if (childLeft != null && childRight != null)
+                if (childLeafLeft != null && childLeafRight != null)
                 {
-                    mapGenerator.createHall(childLeft.GetRoom(), childRight.GetRoom());
+                    mapGenerator.createHall(childLeafLeft.GetRoom(), childLeafRight.GetRoom());
                 }
             }
             else
             {
-                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, width - 1));
-                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, height - 1));
-                int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
-                int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
+                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafWidth - 1));
+                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafHeight - 1));
+                int x = UnityEngine.Random.Range(_x, _x + (leafWidth - 1) - w);
+                int y = UnityEngine.Random.Range(_y, _y + (leafHeight - 1) - h);
             
                 _room = new Rect(x, y, w, h);
 
@@ -132,30 +132,30 @@
 
         public void CreateCityRooms<T>(CityMapGenerator<T> mapGenerator, int maxLeafSize, int roomMaxSize, int roomMinSize) where T : class, IMap, new()
         {
-            if (childLeft != null || childRight != null)
+            if (childLeafLeft != null || childLeafRight != null)
             {
                 //# recursively search for children until you hit the end of the branch
-                if (childLeft != null)
+                if (childLeafLeft != null)
                 {
-                    childLeft.CreateCityRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
+                    childLeafLeft.CreateCityRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
-                if (childRight != null)
+                if (childLeafRight != null)
                 {
-                    childRight.CreateCityRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
+                    childLeafRight.CreateCityRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
-                if (childLeft != null && childRight != null)
+                if (childLeafLeft != null && childLeafRight != null)
                 {
-                    mapGenerator.createHall(childLeft.GetRoom(), childRight.GetRoom());
+                    mapGenerator.createHall(childLeafLeft.GetRoom(), childLeafRight.GetRoom());
                 }
             }
             else
             {
-                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, width - 1));
-                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, height - 1));
-                int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
-                int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
+                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafWidth - 1));
+                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, leafHeight - 1));
+                int x = UnityEngine.Random.Range(_x, _x + (leafWidth - 1) - w);
+                int y = UnityEngine.Random.Range(_y, _y + (leafHeight - 1) - h);
                 
                 _room = new Rect(x, y, w, h);
 
@@ -171,18 +171,18 @@
             }
             else
             {
-                if (childLeft != null)
+                if (childLeafLeft != null)
                 {
-                    _room1 = childLeft.GetRoom();
+                    _room1 = childLeafLeft.GetRoom();
                 }
 
-                if (childRight != null)
+                if (childLeafRight != null)
                 {
-                    _room2 = childRight.GetRoom();
+                    _room2 = childLeafRight.GetRoom();
                 }
             }
 
-            if (childLeft == null && childRight == null)
+            if (childLeafLeft == null && childLeafRight == null)
             {
                 return Rect.zero;
             }
@@ -194,7 +194,7 @@
             {
                 return _room2;
             }
-            else if (Convert.ToBoolean(_random.Next(0, 1)))
+            else if (Convert.ToBoolean(_random.Next(0, 2)))
             {
                 return _room1;
             }

@@ -64,15 +64,15 @@
 
                 for (int i = 0; i < _leafs.Count; i++)
                 {
-                    if ((_leafs[i].childLeft == null) && (_leafs[i].childRight == null))
+                    if ((_leafs[i].childLeafLeft == null) && (_leafs[i].childLeafRight == null))
                     {
-                        if ((_leafs[i].width > _maxLeafSize) || (_leafs[i].height > _maxLeafSize))
+                        if ((_leafs[i].leafWidth > _maxLeafSize) || (_leafs[i].leafHeight > _maxLeafSize))
                         {
                             //Try to split the leaf
                             if (_leafs[i].SplitLeaf(_minLeafSize))
                             {
-                                _leafs.Add(_leafs[i].childLeft);
-                                _leafs.Add(_leafs[i].childRight);
+                                _leafs.Add(_leafs[i].childLeafLeft);
+                                _leafs.Add(_leafs[i].childLeafRight);
                                 splitSuccessfully = true;
                             }
                         }
