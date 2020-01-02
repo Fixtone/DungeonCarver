@@ -43,3 +43,11 @@ TunnelingWithRoomsMapGenerator
 * Version 0.1
 
 ## References
+*[Reddit Post]https://www.reddit.com/r/roguelikedev/comments/6df0aw/my_implementation_of_a_bunch_of_dungeon_algorithms/
+*[Rogue Basin Article]http://www.roguebasin.com/index.php?title=Complete_Roguelike_Tutorial,_using_python%2Blibtcod,_part_3#Dungeon_generator
+*[Rogue Basin Article]http://roguebasin.roguelikedevelopment.org/index.php?title=Dynamically_Sized_Maze
+*[Rogue Basin Article]http://www.roguebasin.com/index.php?title=Random_Walk_Cave_Generation
+*[Rogue Basin Article]http://roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze
+*[Rogue Basin Article]http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+*[Rogue Basin Article]http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation
+*[Evil Science Blog]https://www.evilscience.co.uk/a-c-algorithm-to-build-roguelike-cave-systems-part-1/
