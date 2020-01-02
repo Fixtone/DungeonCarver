@@ -14,10 +14,11 @@
         private const int MAGIC = 666;
         private const int CELL_R = 2;
 
-        private int _width;
-        private int _height;
-        private int _maxCellWidth;
-        private int _maxCellHeight;
+        private readonly int _width;
+        private readonly int _height;
+        private readonly int _maxCellWidth;
+        private readonly int _maxCellHeight;
+        private readonly System.Random _random;
 
         private int[,] _cell;        
 
@@ -27,12 +28,13 @@
         /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
-        public TunnelingMazeMapGenerator (int width, int height)
+        public TunnelingMazeMapGenerator (int width, int height, System.Random random)
         {
             _width = width;
             _height = height;
             _maxCellWidth = (width / CELL_R);
             _maxCellHeight = (height / CELL_R);
+            _random = random;
 
             _cell = new int[_maxCellWidth, _maxCellHeight];
         }
@@ -67,7 +69,7 @@
                 }
 
                 // Use Direction Lookup table for more Generic dig function.
-                Vector2Int direction = MapUtils.FourDirections[UnityEngine.Random.Range(0, MapUtils.FourDirections.Count)];
+                Vector2Int direction = MapUtils.FourDirections[_random.Next(0, MapUtils.FourDirections.Count)];
                 bool isInRange = IsInRange(rx * CELL_R + direction.x, ry * CELL_R + direction.y);
                 
                 int x = rx + direction.x;
@@ -82,8 +84,8 @@
                 {
                     do 
                     {
-                        rx = UnityEngine.Random.Range(0, _maxCellWidth);
-                        ry = UnityEngine.Random.Range(0, _maxCellHeight);
+                        rx = _random.Next(0, _maxCellWidth);
+                        ry = _random.Next(0, _maxCellHeight);
                     } 
                     while (_cell[rx, ry] != 1);
                 }

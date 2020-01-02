@@ -28,7 +28,8 @@
         private readonly int _mapWidth;
         private readonly int _mapHeight;
         private readonly Vector2Int _inset;
-        
+        private readonly System.Random _random;
+
         private List<Leaf> _leafs = new List<Leaf>();
         private List<Rect> _rooms = new List<Rect>();
         private Rect _room;
@@ -38,11 +39,12 @@
         /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
-        public CityMapGenerator(int mapWidth, int mapHeight, int maxLeafSize, int roomMaxSize, int roomMinSize, Vector2Int inset)
+        public CityMapGenerator(int mapWidth, int mapHeight, int maxLeafSize, int roomMaxSize, int roomMinSize, Vector2Int inset, System.Random random)
         {
             _mapWidth = mapWidth;
             _mapHeight = mapHeight;
             _inset = inset;
+            _random = random;
 
             this.maxLeafSize = maxLeafSize;
             this.roomMaxSize = roomMaxSize;
@@ -61,7 +63,7 @@
 
             _leafs = new List<Leaf>();
 
-            Leaf rootLeaf = new Leaf(_inset.x, _inset.y, _mapWidth - _inset.x, _mapHeight - _inset.y);
+            Leaf rootLeaf = new Leaf(_inset.x, _inset.y, _mapWidth - _inset.x, _mapHeight - _inset.y, _random);
 
             _leafs.Add(rootLeaf);
 

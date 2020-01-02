@@ -15,6 +15,7 @@
         private readonly int _maxRooms;
         private readonly int _roomMaxSize;
         private readonly int _roomMinSize;
+        private readonly System.Random _random;
 
         private T _map;
 
@@ -27,13 +28,14 @@
         /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
         /// <param name="random">A class implementing IRandom that will be used to generate pseudo-random numbers necessary to create the Map</param>
-        public TunnelingWithRoomsMapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize)
+        public TunnelingWithRoomsMapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize, System.Random random)
         {
             _width = width;
             _height = height;
             _maxRooms = maxRooms;
             _roomMaxSize = roomMaxSize;
             _roomMinSize = roomMinSize;
+            _random = random;
         }
 
         /// <summary>
@@ -56,10 +58,10 @@
 
             for (int r = 0; r < _maxRooms; r++)
             {
-                int roomWidth = UnityEngine.Random.Range(_roomMinSize, _roomMaxSize);
-                int roomHeight = UnityEngine.Random.Range(_roomMinSize, _roomMaxSize);
-                int roomXPosition = UnityEngine.Random.Range(0, _width - roomWidth - 1);
-                int roomYPosition = UnityEngine.Random.Range(0, _height - roomHeight - 1);
+                int roomWidth = _random.Next(_roomMinSize, _roomMaxSize);
+                int roomHeight = _random.Next(_roomMinSize, _roomMaxSize);
+                int roomXPosition = _random.Next(0, _width - roomWidth);
+                int roomYPosition = _random.Next(0, _height - roomHeight);
                 
                 Rect newRoom = new Rect(roomXPosition, roomYPosition, roomWidth, roomHeight);
                 bool newRoomIntersects = false;
@@ -94,7 +96,7 @@
                 int currentRoomCenterX = (int)rooms[r].center.x;
                 int currentRoomCenterY = (int)rooms[r].center.y;
 
-                if (UnityEngine.Random.Range(0, 2) == 0)
+                if (_random.Next(0, 2) == 0)
                 {
                     MakeHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
                     MakeVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);

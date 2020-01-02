@@ -17,6 +17,7 @@
         private readonly float _weightedTowardCenter;
         private readonly float _weightedTowardPreviousDirection;
         private readonly float _filledGoal;
+        private readonly System.Random _random;
         private int _drunkardX;
         private int _drunkardY;
         private MapUtils.CardinalFourDirections _previousDirection;
@@ -32,7 +33,7 @@
         /// <param name="maxRooms">The maximum number of rooms that will exist in the generated Map</param>
         /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
-        public DrunkardsWalkMapGenerator(int width, int height, float percentGoal, int walkIterations, float weightedTowardCenter, float weightedTowardPreviousDirection)
+        public DrunkardsWalkMapGenerator(int width, int height, float percentGoal, int walkIterations, float weightedTowardCenter, float weightedTowardPreviousDirection, System.Random random)
         {   
             _width = width;
             _height = height;
@@ -40,9 +41,10 @@
             _walkIterations = Math.Max(walkIterations, (_width*_height*10));
             _weightedTowardCenter = weightedTowardCenter;
             _weightedTowardPreviousDirection = weightedTowardPreviousDirection;
-            _drunkardX = UnityEngine.Random.Range(2, _width-2);
-            _drunkardY = UnityEngine.Random.Range(2, _height-2);
-            _filledGoal = _width* _height* _percentGoal;
+            _random = random;
+            _drunkardX = _random.Next(2, _width-2);
+            _drunkardY = _random.Next(2, _height-2);
+            _filledGoal = _width* _height* _percentGoal;            
             _filled = 0.0f;
             _map = new T();
         }
@@ -61,7 +63,7 @@
             _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Block));
 
-            int randomWalkIterations = UnityEngine.Random.Range(1, _walkIterations);
+            int randomWalkIterations = _random.Next(1, _walkIterations);
             for(int iteration = 0; iteration < randomWalkIterations; iteration ++)
             {
                 Walk(_width, _height);
@@ -82,7 +84,7 @@
 		    float east = 1.0f;
 		    float west = 1.0f;
 
-            //# weight the random walk against edges
+            //weight the random walk against edges
 
             //drunkard is at far left side of map
 		    if (_drunkardX < width*0.25f)
@@ -137,7 +139,7 @@
 
             //Choose the direction
             MapUtils.CardinalFourDirections direction;
-		    float choice = UnityEngine.Random.Range(0.0f, 1.0f);
+		    double choice = _random.NextDouble();
             int dx = 0;
             int dy = 0;
 

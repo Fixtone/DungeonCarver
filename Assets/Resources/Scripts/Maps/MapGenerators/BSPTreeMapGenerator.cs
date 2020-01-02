@@ -26,6 +26,7 @@
 
         private readonly int _width;
         private readonly int _height;
+        private System.Random _random;
 
         private T _map;
         private List<Leaf> _leafs = new List<Leaf>();
@@ -38,13 +39,15 @@
         /// <param name="maxRooms">The maximum number of rooms that will exist in the generated Map</param>
         /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
         /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
-        public BSPTreeMapGenerator(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize)
+        public BSPTreeMapGenerator(int width, int height, int maxLeafSize, int roomMaxSize, int roomMinSize, System.Random random)
         {
             _width = width;
             _height = height;
+            _random = random;
+
             this.maxLeafSize = maxLeafSize;
             this.roomMaxSize = roomMaxSize;
-            this.roomMinSize = roomMinSize;
+            this.roomMinSize = roomMinSize;           
 
             _map = new T();
         }
@@ -63,7 +66,7 @@
             _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Block));
 
-            Leaf rootLeaf = new Leaf(0, 0, _map.Width, _map.Height);
+            Leaf rootLeaf = new Leaf(0, 0, _map.Width, _map.Height, _random);
             _leafs.Add(rootLeaf);
 
             bool splitSuccessfully = true;
@@ -114,7 +117,7 @@
             Vector2Int room2Center = Vector2Int.CeilToInt(room2.center);
 
             //# 50% chance that a tunnel will start horizontally
-            bool chance = Convert.ToBoolean(UnityEngine.Random.Range(0, 1));
+            bool chance = Convert.ToBoolean(_random.Next(0, 2));
             if (chance)
             {
                 MakeHorizontalTunnel(room1Center.x, room2Center.x, room1Center.y);

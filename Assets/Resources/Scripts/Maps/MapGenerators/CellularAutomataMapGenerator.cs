@@ -17,6 +17,7 @@
         private readonly int _fillProbability;
         private readonly int _totalIterations;
         private readonly int _cutoffOfBigAreaFill;
+        private readonly System.Random _random;
 
         private T _map;
 
@@ -28,13 +29,15 @@
         /// <param name="fillProbability">Recommend int between 40 and 60. Percent chance that a given cell will be a floor when randomizing all cells.</param>
         /// <param name="totalIterations">Recommend int between 2 and 5. Number of times to execute the cellular automata algorithm.</param>
         /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>        
-        public CellularAutomataMapGenerator(int width, int height, int fillProbability, int totalIterations, int cutoffOfBigAreaFill)
+        public CellularAutomataMapGenerator(int width, int height, int fillProbability, int totalIterations, int cutoffOfBigAreaFill, System.Random random)
         {
             _width = width;
             _height = height;
             _fillProbability = fillProbability;
             _totalIterations = totalIterations;
             _cutoffOfBigAreaFill = cutoffOfBigAreaFill;
+            _random = random;
+
             _map = new T();
         }
 
@@ -79,7 +82,7 @@
                 {
                     _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
                 }
-                else if (UnityEngine.Random.Range(1, 100) < _fillProbability)
+                else if (_random.Next(1, 100) < _fillProbability)
                 {
                     _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));                    
                 }

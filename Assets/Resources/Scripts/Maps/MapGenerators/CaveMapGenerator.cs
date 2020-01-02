@@ -25,7 +25,7 @@
         private readonly int _corridor_Min;
         private readonly int _corridor_Max;
         private readonly int _breakOut;
-
+        private readonly System.Random _random;
         /// <summary>
         /// Caves within the map are stored here
         /// </summary>
@@ -48,7 +48,7 @@
         /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>
         /// <param name="random">A class implementing IRandom that will be used to generate pseudo-random numbers necessary to create the Map</param>
         public CaveMapGenerator(int width, int height, int neighbours, int iterations, int closeTileProb, int lowerLimit, int upperLimit, int emptyNeighbours,
-                                       int emptyTileNeighbours, int corridorSpace, int corridor_MaxTurns, int corridor_Min, int corridor_Max, int breakOut)
+                                       int emptyTileNeighbours, int corridorSpace, int corridor_MaxTurns, int corridor_Min, int corridor_Max, int breakOut, System.Random random)
         {
             _width = width;
             _height = height;
@@ -64,6 +64,7 @@
             _corridor_Min = corridor_Min;
             _corridor_Max = corridor_Max;
             _breakOut = breakOut;
+            _random = random;
 
             _map = new T();
         }
@@ -86,28 +87,6 @@
             GetCaves();
             ConnectCaves();
 
-            using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter(@"D:\WriteLines2.txt"))
-            {
-                List<char> line = new List<char>();
-                for (int y = 0; y < _height; y++)
-                {
-                    for (int x = 0; x < _width; x++)
-                    {
-                        if (_map.GetTile(x, y).Tile.type.Equals(Tile.Type.Block))
-                        {
-                            line.Add('#');
-                        }
-                        else
-                        {
-                            line.Add('.');
-                        }
-                    }
-                    file.WriteLine(line.ToArray());
-                    line.Clear();
-                }
-            }
-
             return _map;
         }
 
@@ -120,7 +99,7 @@
                     continue;
                 }
 
-                if (UnityEngine.Random.Range(0, 99) < _closeTileProb)
+                if (_random.Next(0, 100) < _closeTileProb)
                 {
                     _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
                 }
@@ -131,7 +110,7 @@
             //Pick cells at random
             for (int x = 0; x <= _iterations; x++)
             {
-                tilePosition = new Vector2Int(UnityEngine.Random.Range(0, _width), UnityEngine.Random.Range(0, _height));
+                tilePosition = new Vector2Int(_random.Next(0, _width), _random.Next(0, _height));
 
                 //if the randomly selected cell has more closed neighbours than the property Neighbours
                 //set it closed, else open it
@@ -272,7 +251,7 @@
             _corridors = new List<Vector2Int>(); //corridors built stored here
 
             //get started by randomly selecting a cave..
-            currentcave = _caves[UnityEngine.Random.Range(0, _caves.Count())];
+            currentcave = _caves[_random.Next(0, _caves.Count())];
             ConnectedCaves.Add(currentcave);
             _caves.Remove(currentcave);
 
@@ -283,16 +262,16 @@
                 //no corridors are present, sp build off a cave
                 if (_corridors.Count() == 0)
                 {
-                    currentcave = ConnectedCaves[UnityEngine.Random.Range(0, ConnectedCaves.Count())];
+                    currentcave = ConnectedCaves[_random.Next(0, ConnectedCaves.Count())];
                     CaveGetEdge(currentcave, ref cor_point, ref cor_direction);
                 }
                 else
                 {
                     //corridors are presnt, so randomly chose whether a get a start
                     //point from a corridor or cave
-                    if (UnityEngine.Random.Range(0, 99) > 50)
+                    if (_random.Next(0, 100) > 50)
                     {
-                        currentcave = ConnectedCaves[UnityEngine.Random.Range(0, ConnectedCaves.Count())];
+                        currentcave = ConnectedCaves[_random.Next(0, ConnectedCaves.Count())];
                         CaveGetEdge(currentcave, ref cor_point, ref cor_direction);
                     }
                     else
@@ -364,7 +343,7 @@
             do
             {
                 //random point in cave
-                pCavePoint = pCave.ToList()[UnityEngine.Random.Range(0, pCave.Count())];
+                pCavePoint = pCave.ToList()[_random.Next(0, pCave.Count())];
 
                 pDirection = FourDirectiosnGet(pDirection);
 
@@ -397,7 +376,7 @@
             do
             {
                 //the modifiers below prevent the first of last point being chosen
-                pLocation = _corridors[UnityEngine.Random.Range(1, _corridors.Count - 1)];
+                pLocation = _corridors[_random.Next(1, _corridors.Count)];
 
                 //attempt to locate all the empy map points around the location
                 //using the directions to offset the randomly chosen point
@@ -414,7 +393,7 @@
 
             } while (validdirections.Count == 0);
 
-            pDirection = validdirections[UnityEngine.Random.Range(0, validdirections.Count)];
+            pDirection = validdirections[_random.Next(0, validdirections.Count)];
             pLocation += pDirection;
         }
 
@@ -440,7 +419,7 @@
             {
                 pTurns--;
 
-                corridorlength = UnityEngine.Random.Range(_corridor_Min, _corridor_Max);
+                corridorlength = _random.Next(_corridor_Min, _corridor_Max);
                 //build corridor
                 while (corridorlength > 0)
                 {
@@ -527,7 +506,7 @@
             do
             {
 
-                newdir = MapUtils.FourDirections[UnityEngine.Random.Range(0, MapUtils.FourDirections.Count())];
+                newdir = MapUtils.FourDirections[_random.Next(0, MapUtils.FourDirections.Count())];
 
             } while (newdir.x != -p.x & newdir.y != -p.y);
 
@@ -552,7 +531,7 @@
             do
             {
 
-                NewDir = MapUtils.FourDirections[UnityEngine.Random.Range(0, MapUtils.FourDirections.Count())];
+                NewDir = MapUtils.FourDirections[_random.Next(0, MapUtils.FourDirections.Count())];
 
             } while (DirectionReverse(NewDir) == pDir | DirectionReverse(NewDir) == pDirExclude);
 

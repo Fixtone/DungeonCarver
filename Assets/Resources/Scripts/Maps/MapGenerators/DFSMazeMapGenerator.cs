@@ -13,8 +13,9 @@
     {
         private System.Random _rand = new System.Random();
 
-        private int _mapWidth;
-        private int _mapHeight;
+        private int _width;
+        private int _height;
+        private System.Random _random;
 
         private T _map;
 
@@ -22,10 +23,11 @@
         /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
-        public DFSMazeMapGenerator (int mapWidth, int mapHeight)
+        public DFSMazeMapGenerator (int mapWidth, int mapHeight, System.Random random)
         {
-            _mapWidth = mapWidth;
-            _mapHeight = mapHeight;
+            _width = mapWidth;
+            _height = mapHeight;
+            _random = random;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@
         public T CreateMap()
         {
             _map = new T();
-            _map.Initialize(_mapWidth, _mapHeight);
+            _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Block));
 
             CreateMaze(1, 1);
@@ -48,7 +50,7 @@
             List<int> visitOrder = new List<int> {0,1,2,3};
 
             //out of boundary
-            if(i < 1 || j < 1 || i >= _mapWidth - 1 || j >= _mapHeight - 1)
+            if(i < 1 || j < 1 || i >= _width - 1 || j >= _height - 1)
             { 
                 return ;
             }
@@ -86,7 +88,7 @@
             {
                 int ni = i + direction.x;
                 int nj = j + direction.y;
-                if(ni < 0 || nj < 0 || ni >= _mapWidth || nj >= _mapHeight)
+                if(ni < 0 || nj < 0 || ni >= _width || nj >= _height)
                 {
                     continue;
                 }

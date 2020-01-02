@@ -23,18 +23,20 @@
             get; private set;
         }
 
+        private readonly System.Random _random;
         private readonly int _x;
         private readonly int _y;
         private Rect _room;
         private Rect _room1;
-        private Rect _room2;
+        private Rect _room2;        
 
-        public Leaf(int x, int y, int width, int height)
+        public Leaf(int x, int y, int width, int height, System.Random random)
         {
             this.width = width;
             this.height = height;
             _x = x;
             _y = y;
+            _random = random;
         }
 
         public bool SplitLeaf()
@@ -51,7 +53,7 @@
             //split the leaf horizontally.
             //Otherwise, choose the direction at random.
 
-            bool splitHorizontally = Convert.ToBoolean(UnityEngine.Random.Range(0, 1));
+            bool splitHorizontally = Convert.ToBoolean(_random.Next(0, 2));
 
             float hotizontalFactor = (float)width / height;
             float verticalFactor = (float)height / width;
@@ -84,13 +86,13 @@
 
             if (splitHorizontally)
             {
-                childLeft = new Leaf(_x, _y, width, split);
-                childRight = new Leaf(_x, _y + split, width, height - split);
+                childLeft = new Leaf(_x, _y, width, split, _random);
+                childRight = new Leaf(_x, _y + split, width, height - split, _random);
             }
             else
             {
-                childLeft = new Leaf(_x, _y, split, height);
-                childRight = new Leaf(_x + split, _y, width - split, height);
+                childLeft = new Leaf(_x, _y, split, height, _random);
+                childRight = new Leaf(_x + split, _y, width - split, height, _random);
             }
 
             return true;
