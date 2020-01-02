@@ -41,28 +41,28 @@
             IMapGenerator<Map> mapCreationStrategy = new TunnelingWithRoomsMapGenerator<Map>(80, 60, 30, 15, 6, random);
             IMap map = Map.Create(mapCreationStrategy);
 
-            for (int x = 0; x < map.Width; x ++)
+            for (int x = 0; x < map.Width; x++)
             {
-                for(int y = 0; y < map.Height; y ++)
+                for (int y = 0; y < map.Height; y++)
                 {
-                    GameObject newTile = GameObject.Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity,  dungeonParent);
-                    switch(map.GetTile(x, y).Tile.type)
+                    GameObject newTile = GameObject.Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity, dungeonParent);
+                    switch (map.GetTile(x, y).Tile.type)
                     {
                         case Tile.Type.Block:
-                        {
-                            newTile.GetComponent<SpriteRenderer>().sprite = wall;
-                            break;
-                        }
+                            {
+                                newTile.GetComponent<SpriteRenderer>().sprite = wall;
+                                break;
+                            }
                         case Tile.Type.Empty:
-                        {
-                            newTile.GetComponent<SpriteRenderer>().sprite = empty;
-                            break;
-                        }
+                            {
+                                newTile.GetComponent<SpriteRenderer>().sprite = empty;
+                                break;
+                            }
                     }
                 }
             }
 
-            Camera.main.transform.localPosition = new Vector3( map.Width/2, map.Height/2, -10);
+            Camera.main.transform.localPosition = new Vector3(map.Width / 2, map.Height / 2, -10);
         }
     }
 }

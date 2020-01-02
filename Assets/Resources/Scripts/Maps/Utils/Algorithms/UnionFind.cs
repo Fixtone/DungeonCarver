@@ -38,7 +38,10 @@
         /// Returns the number of components in this data structure
         /// </summary>
         /// <returns>The number of components in this data structure</returns>
-        public int Count { get; private set; }
+        public int Count
+        {
+            get; private set;
+        }
 
         /// <summary>
         /// Returns the component identifier of the component containing site p

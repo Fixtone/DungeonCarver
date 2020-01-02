@@ -28,7 +28,7 @@
         private readonly int _y;
         private Rect _room;
         private Rect _room1;
-        private Rect _room2;        
+        private Rect _room2;
 
         public Leaf(int x, int y, int width, int height, System.Random random)
         {
@@ -131,7 +131,7 @@
             }
         }
 
-         public void CreateCityRooms<T>(CityMapGenerator<T> mapGenerator) where T : class, IMap, new()
+        public void CreateCityRooms<T>(CityMapGenerator<T> mapGenerator) where T : class, IMap, new()
         {
             if (childLeft != null || childRight != null)
             {
@@ -147,10 +147,10 @@
                 }
 
                 if (childLeft != null && childRight != null)
-                {                    
+                {
                     mapGenerator.createHall(childLeft.GetRoom(), childRight.GetRoom());
                 }
-            }            
+            }
             else
             {
                 int w = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, width - 1));

@@ -58,7 +58,7 @@
             RandomlyFillCells();
 
             for (int i = 0; i < _totalIterations; i++)
-            {             
+            {
                 if (i < _cutoffOfBigAreaFill)
                 {
                     CellularAutomataBigAreaAlgorithm();
@@ -80,15 +80,15 @@
             {
                 if (_map.IsBorderTile(tileData.Position))
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
+                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
                 }
                 else if (_random.Next(1, 100) < _fillProbability)
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));                    
+                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
                 }
                 else
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
+                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
                 }
             }
         }
@@ -103,13 +103,14 @@
                 {
                     continue;
                 }
+
                 if ((CountWallsNear(tileData, 1) >= 5) || (CountWallsNear(tileData, 2) <= 2))
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                  
+                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
                 }
                 else
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));                  
+                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
                 }
             }
 
@@ -126,13 +127,14 @@
                 {
                     continue;
                 }
+
                 if (CountWallsNear(tileData, 1) >= 5)
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));                    
+                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
                 }
                 else
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));                    
+                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
                 }
             }
 
@@ -140,7 +142,7 @@
         }
 
         private int CountWallsNear(TileData tileData, int distance)
-        {            
+        {
             int count = 0;
             foreach (TileData nearbyCell in _map.GetTilesInSquare(tileData.Position.x, tileData.Position.y, distance))
             {
@@ -148,6 +150,7 @@
                 {
                     continue;
                 }
+
                 if (nearbyCell.Tile.type.Equals(Tile.Type.Block))
                 {
                     count++;
@@ -181,7 +184,7 @@
                         {
                             if (tileData.Position.x != previousTile.Position.x || tileData.Position.y != previousTile.Position.y)
                             {
-                                _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));                                
+                                _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
                             }
                         }
                         previousTile = tileData;
@@ -202,10 +205,12 @@
                 {
                     continue;
                 }
+
                 if (unionFind.Connected(i, mapSectionIndex))
                 {
                     continue;
                 }
+
                 int distanceBetween = DistanceBetween(start, mapSections[i]);
                 if (distanceBetween < distance)
                 {
@@ -274,7 +279,7 @@
 
                     mapSection.AddTile(tileData);
                     _visited[tileData.Position.y][tileData.Position.x] = true;
-                    
+
                     foreach (TileData neighbor in GetNeighbors(tileData))
                     {
                         if (tileData.Tile.Equals(Tile.Type.Empty) == neighbor.Tile.Equals(Tile.Type.Empty) && !_visited[neighbor.Position.y][neighbor.Position.x])
@@ -325,7 +330,10 @@
 
             public RectInt Bounds => new RectInt(_left, _top, _right - _left + 1, _bottom - _top + 1);
 
-            public HashSet<TileData> Tiles { get; private set; }
+            public HashSet<TileData> Tiles
+            {
+                get; private set;
+            }
 
             public MapSection()
             {
@@ -346,20 +354,23 @@
                 {
                     _right = tileData.Position.x;
                 }
+
                 if (tileData.Position.x < _left)
                 {
                     _left = tileData.Position.x;
                 }
+
                 if (tileData.Position.y > _bottom)
                 {
                     _bottom = tileData.Position.y;
                 }
+
                 if (tileData.Position.y < _top)
                 {
                     _top = tileData.Position.y;
                 }
             }
         }
-               
-    }    
+
+    }
 }

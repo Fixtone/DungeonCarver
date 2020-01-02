@@ -12,8 +12,14 @@
     {
         private TileData[,] mTerrain;
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public int Width
+        {
+            get; private set;
+        }
+        public int Height
+        {
+            get; private set;
+        }
 
         /// <summary>
         /// Constructor creates a new uninitialized Map
@@ -38,7 +44,7 @@
                     SetTile(x, y, tile);
                 }
             }
-        }        
+        }
 
         public IEnumerable<TileData> GetAllTiles()
         {
@@ -155,7 +161,7 @@
         {
             if (mapCreationStrategy == null)
             {
-                Debug.LogError(nameof(mapCreationStrategy) + "Map creation strategy cannot be null");                
+                Debug.LogError(nameof(mapCreationStrategy) + "Map creation strategy cannot be null");
             }
 
             return mapCreationStrategy.CreateMap();
@@ -192,6 +198,6 @@
             return (y < 0) ? 0 : (y > Height - 1) ? Height - 1 : y;
         }
 
-        
+
     }
 }

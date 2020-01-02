@@ -10,7 +10,7 @@
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class BSPTreeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
-    {        
+    {
         public int maxLeafSize
         {
             get; private set;
@@ -47,7 +47,7 @@
 
             this.maxLeafSize = maxLeafSize;
             this.roomMaxSize = roomMaxSize;
-            this.roomMinSize = roomMinSize;           
+            this.roomMinSize = roomMinSize;
 
             _map = new T();
         }

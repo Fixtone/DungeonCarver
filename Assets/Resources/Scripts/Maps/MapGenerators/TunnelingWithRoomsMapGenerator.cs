@@ -49,7 +49,7 @@
         /// </remarks>
         /// <returns>An IMap of the specified type</returns>
         public T CreateMap()
-        {            
+        {
             _map = new T();
             _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Block));
@@ -62,7 +62,7 @@
                 int roomHeight = _random.Next(_roomMinSize, _roomMaxSize);
                 int roomXPosition = _random.Next(0, _width - roomWidth);
                 int roomYPosition = _random.Next(0, _height - roomHeight);
-                
+
                 Rect newRoom = new Rect(roomXPosition, roomYPosition, roomWidth, roomHeight);
                 bool newRoomIntersects = false;
                 foreach (Rect room in rooms)
@@ -73,6 +73,7 @@
                         break;
                     }
                 }
+
                 if (!newRoomIntersects)
                 {
                     rooms.Add(newRoom);

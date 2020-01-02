@@ -48,7 +48,7 @@
 
             this.maxLeafSize = maxLeafSize;
             this.roomMaxSize = roomMaxSize;
-            this.roomMinSize = roomMinSize;            
+            this.roomMinSize = roomMinSize;
         }
 
         /// <summary>
@@ -73,14 +73,14 @@
             {
                 splitSuccessfully = false;
 
-                for(int i = 0; i< _leafs.Count; i++)
+                for (int i = 0; i < _leafs.Count; i++)
                 {
                     if ((_leafs[i].childLeft == null) && (_leafs[i].childRight == null))
                     {
-                        if((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize) || (UnityEngine.Random.Range(0.0f, 1.0f) > 0.8f))
-                        { 
+                        if ((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize) || (UnityEngine.Random.Range(0.0f, 1.0f) > 0.8f))
+                        {
                             //Try to split the leaf
-                            if(_leafs[i].SplitLeaf())
+                            if (_leafs[i].SplitLeaf())
                             {
                                 _leafs.Add(_leafs[i].childLeft);
                                 _leafs.Add(_leafs[i].childRight);
@@ -102,38 +102,37 @@
             _rooms.Add(room);
 
             //Build Walls
-		    //set all tiles within a rectangle to 1
-            for(int x = (int)room.x; x <= room.max.x; x++)
+            //set all tiles within a rectangle to 1
+            for (int x = (int)room.x; x <= room.max.x; x++)
             {
-                for(int y = (int)room.y; y <= room.max.y; y++)
+                for (int y = (int)room.y; y <= room.max.y; y++)
                 {
-                     _map.SetTile(x, y, new Tile(Tile.Type.Block));
+                    _map.SetTile(x, y, new Tile(Tile.Type.Block));
                 }
             }
 
-            for(int x = (int)room.x+1; x < room.max.x; x++)
+            for (int x = (int)room.x + 1; x < room.max.x; x++)
             {
-                for(int y = (int)room.y+1; y < room.max.y; y++)
+                for (int y = (int)room.y + 1; y < room.max.y; y++)
                 {
-                     _map.SetTile(x, y, new Tile(Tile.Type.Empty));
+                    _map.SetTile(x, y, new Tile(Tile.Type.Empty));
                 }
             }
         }
 
         public void createHall(Rect room1, Rect room2)
         {
-            //# This method actually creates a list of rooms,
-            //# but since it is called from an outside class that is also
-            //# used by other dungeon Generators, it was simpler to 
-            //# repurpose the createHall method that to alter the leaf class.
+            //This method actually creates a list of rooms,
+            //but since it is called from an outside class that is also
+            //used by other dungeon Generators, it was simpler to 
+            //repurpose the createHall method that to alter the leaf class.
 
-            
-            if(_rooms.Find(item => item.Equals(room1)) == null)
+            if (_rooms.Find(item => item.Equals(room1)) == null)
             {
                 _rooms.Add(room1);
             }
 
-            if(_rooms.Find(item => item.Equals(room2)) == null)
+            if (_rooms.Find(item => item.Equals(room2)) == null)
             {
                 _rooms.Add(room2);
             }
@@ -141,40 +140,40 @@
 
         public void CreateDoors()
         {
-            foreach(Rect room in _rooms)
+            foreach (Rect room in _rooms)
             {
                 Vector2Int roomCenter = Vector2Int.CeilToInt(room.center);
                 Array values = Enum.GetValues(typeof(MapUtils.CardinalFourDirections));
 
                 MapUtils.CardinalFourDirections randomDirection = (MapUtils.CardinalFourDirections)values.GetValue(UnityEngine.Random.Range(0, values.Length));
-                
+
                 Vector2Int doorPosition = Vector2Int.zero;
-                switch(randomDirection)
+                switch (randomDirection)
                 {
                     case MapUtils.CardinalFourDirections.NORTH:
                         {
                             doorPosition = new Vector2Int(roomCenter.x, (int)room.max.y);
                             break;
                         }
-                        case MapUtils.CardinalFourDirections.SOUTH:
+                    case MapUtils.CardinalFourDirections.SOUTH:
                         {
                             doorPosition = new Vector2Int(roomCenter.x, (int)room.min.y);
                             break;
                         }
-                        case MapUtils.CardinalFourDirections.EAST:
+                    case MapUtils.CardinalFourDirections.EAST:
                         {
                             doorPosition = new Vector2Int((int)room.min.x, roomCenter.y);
                             break;
                         }
-                        case MapUtils.CardinalFourDirections.WEST:
+                    case MapUtils.CardinalFourDirections.WEST:
                         {
                             doorPosition = new Vector2Int((int)room.max.x, roomCenter.y);
                             break;
                         }
                 }
 
-                _map.SetTile(doorPosition.x, doorPosition.y, new Tile(Tile.Type.Empty));                
+                _map.SetTile(doorPosition.x, doorPosition.y, new Tile(Tile.Type.Empty));
             }
-        } 
+        }
     }
 }

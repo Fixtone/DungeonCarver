@@ -10,15 +10,21 @@
     /// </summary>
     public interface IMap
     {
-        int Width {get;}
-        int Height { get; }
+        int Width
+        {
+            get;
+        }
+        int Height
+        {
+            get;
+        }
 
         void Initialize(int width, int height);
-        
+
         /// <summary>
         /// Sets the properties of all Tiles in the Map to be transparent and walkable
         /// </summary>
-        void Clear(Tile tile);        
+        void Clear(Tile tile);
 
         IEnumerable<TileData> GetAllTiles();
 

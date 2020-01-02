@@ -1,5 +1,5 @@
 ﻿namespace DungeonCarver
-{    
+{
     using System.Collections.Generic;
     using UnityEngine;
 
@@ -9,7 +9,7 @@
 	/// exterior of the rooms, then opens one wall for a door.	
     /// </summary>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
-    public class TunnelingMazeMapGenerator   <T> : IMapGenerator<T> where T : class, IMap, new()
+    public class TunnelingMazeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
         private const int MAGIC = 666;
         private const int CELL_R = 2;
@@ -20,7 +20,7 @@
         private readonly int _maxCellHeight;
         private readonly System.Random _random;
 
-        private int[,] _cell;        
+        private int[,] _cell;
 
         private T _map;
 
@@ -28,7 +28,7 @@
         /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
         /// </summary>
         /// <param name="size">The size of the Map to be created</param>        
-        public TunnelingMazeMapGenerator (int width, int height, System.Random random)
+        public TunnelingMazeMapGenerator(int width, int height, System.Random random)
         {
             _width = width;
             _height = height;
@@ -49,18 +49,19 @@
             _map.Initialize(_width, _height);
             _map.Clear(new Tile(Tile.Type.Block));
 
-            int rx = 0; int ry = 0;
+            int rx = 0;
+            int ry = 0;
             int count = 0;
 
             int totalCells = _maxCellWidth * _maxCellHeight;
             rx = _maxCellWidth / 2;
             ry = _maxCellHeight / 2;
 
-            _cell[rx , ry] = 1;
+            _cell[rx, ry] = 1;
 
-            int visitedCells = 1; 
+            int visitedCells = 1;
 
-            while( visitedCells < totalCells ) 
+            while (visitedCells < totalCells)
             {
                 count++;
                 if (count < MAGIC)
@@ -71,70 +72,81 @@
                 // Use Direction Lookup table for more Generic dig function.
                 Vector2Int direction = MapUtils.FourDirections[_random.Next(0, MapUtils.FourDirections.Count)];
                 bool isInRange = IsInRange(rx * CELL_R + direction.x, ry * CELL_R + direction.y);
-                
+
                 int x = rx + direction.x;
-                int y =  ry + direction.y;
-                if(isInRange && _cell[rx + direction.x, ry + direction.y] == 0 || UnityEngine.Random.Range(0, 6) == 6)
+                int y = ry + direction.y;
+                if (isInRange && _cell[rx + direction.x, ry + direction.y] == 0 || UnityEngine.Random.Range(0, 6) == 6)
                 {
-                    LinkCells(rx * CELL_R, ry * CELL_R, (rx + direction.x) * CELL_R, (ry+direction.y) * CELL_R);
+                    LinkCells(rx * CELL_R, ry * CELL_R, (rx + direction.x) * CELL_R, (ry + direction.y) * CELL_R);
                     rx += direction.x;
                     ry += direction.y;
                 }
-                else 
+                else
                 {
-                    do 
+                    do
                     {
                         rx = _random.Next(0, _maxCellWidth);
                         ry = _random.Next(0, _maxCellHeight);
-                    } 
+                    }
                     while (_cell[rx, ry] != 1);
                 }
 
-                _cell[rx, ry] = 1; 
+                _cell[rx, ry] = 1;
                 _map.SetTile(rx * CELL_R, ry * CELL_R, new Tile(Tile.Type.Empty));
- 
+
                 visitedCells++;
-            }            
+            }
 
             return _map;
         }
 
         private void FillCells()
-        {            
-            for (int i = 0; i < _maxCellWidth; i++ )
+        {
+            for (int i = 0; i < _maxCellWidth; i++)
             {
                 for (int j = 0; j < _maxCellHeight; j++)
                 {
                     if (_cell[i, j] == 1)
-                    { 
+                    {
                         _map.SetTile(i * CELL_R, j * CELL_R, new Tile(Tile.Type.Empty));
                     }
                 }
-    }
+            }
         }
 
         // Links our Cells
         void LinkCells(int x0, int y0, int x1, int y1)
         {
-            int cx = x0; int cy = y0;
-            while(cx != x1) 
+            int cx = x0;
+            int cy = y0;
+            while (cx != x1)
             {
                 if (x0 > x1)
+                {
                     cx--;
+                }
                 else
+                {
                     cx++;
+                }
+
                 if (IsInRange(cx, cy))
                 {
                     _map.SetTile(cx, cy, new Tile(Tile.Type.Empty));
                 }
             }
 
-            while(cy != y1) 
+            while (cy != y1)
             {
                 if (y0 > y1)
+                {
                     cy--;
+                }
                 else
+                {
                     cy++;
+                }
+
                 if (IsInRange(cx, cy))
                 {
                     _map.SetTile(cx, cy, new Tile(Tile.Type.Empty));
@@ -144,7 +156,7 @@
 
         private bool IsInRange(int x, int y)
         {
-            if ( x > 2 && y > 2 && x < _width - 2 && y < _height - 2)
+            if (x > 2 && y > 2 && x < _width - 2 && y < _height - 2)
             {
                 return true;
             }
