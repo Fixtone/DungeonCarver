@@ -11,22 +11,12 @@
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class BSPTreeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
-        public int maxLeafSize
-        {
-            get; private set;
-        }
-        public int roomMaxSize
-        {
-            get; private set;
-        }
-        public int roomMinSize
-        {
-            get; private set;
-        }
-
         private readonly int _width;
         private readonly int _height;
+        private readonly int _maxLeafSize;
         private readonly int _minLeafSize;
+        private readonly int _roomMaxSize;
+        private readonly int _roomMinSize;
         private System.Random _random;
 
         private T _map;
@@ -44,12 +34,11 @@
         {
             _width = width;
             _height = height;
+            _maxLeafSize = maxLeafSize;
             _minLeafSize = minLeafSize;
+            _roomMaxSize = roomMaxSize;
+            _roomMinSize = roomMinSize;
             _random = random;
-
-            this.maxLeafSize = maxLeafSize;
-            this.roomMaxSize = roomMaxSize;
-            this.roomMinSize = roomMinSize;
 
             _map = new T();
         }
@@ -82,7 +71,7 @@
                 {
                     if (_leafs[i].childLeft == null && _leafs[i].childRight == null)
                     {
-                        if ((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize))
+                        if ((_leafs[i].width > _maxLeafSize) || (_leafs[i].height > _maxLeafSize))
                         {
                             //Try to split the leaf
                             if (_leafs[i].SplitLeaf(_minLeafSize))
@@ -96,7 +85,7 @@
                 }
             }
 
-            rootLeaf.CreateRooms<T>(this);
+            rootLeaf.CreateRooms<T>(this, _maxLeafSize, _roomMaxSize, _roomMinSize);
 
             return _map;
         }

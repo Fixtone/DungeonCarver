@@ -12,22 +12,12 @@
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class CityMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
-        public int maxLeafSize
-        {
-            get; private set;
-        }
-        public int roomMaxSize
-        {
-            get; private set;
-        }
-        public int roomMinSize
-        {
-            get; private set;
-        }
-
         private readonly int _mapWidth;
         private readonly int _mapHeight;
+        private readonly int _maxLeafSize;
         private readonly int _minLeafSize;
+        private readonly int _roomMaxSize;
+        private readonly int _roomMinSize;
         private readonly System.Random _random;
 
         private List<Leaf> _leafs = new List<Leaf>();
@@ -43,12 +33,11 @@
         {
             _mapWidth = mapWidth;
             _mapHeight = mapHeight;
+            _maxLeafSize = maxLeafSize;
             _minLeafSize = minLeafSize;
+            _roomMaxSize = roomMaxSize;
+            _roomMinSize = roomMinSize;
             _random = random;
-
-            this.maxLeafSize = maxLeafSize;
-            this.roomMaxSize = roomMaxSize;
-            this.roomMinSize = roomMinSize;
         }
 
         /// <summary>
@@ -77,7 +66,7 @@
                 {
                     if ((_leafs[i].childLeft == null) && (_leafs[i].childRight == null))
                     {
-                        if ((_leafs[i].width > maxLeafSize) || (_leafs[i].height > maxLeafSize) || (UnityEngine.Random.Range(0.0f, 1.0f) > 0.8f))
+                        if ((_leafs[i].width > _maxLeafSize) || (_leafs[i].height > _maxLeafSize))
                         {
                             //Try to split the leaf
                             if (_leafs[i].SplitLeaf(_minLeafSize))
@@ -91,7 +80,7 @@
                 }
             }
 
-            rootLeaf.CreateCityRooms<T>(this);
+            rootLeaf.CreateCityRooms<T>(this, _maxLeafSize, _roomMaxSize, _roomMinSize);
             CreateDoors();
 
             return _map;
@@ -100,7 +89,6 @@
         public void createRoom(Rect room)
         {
             _rooms.Add(room);
-            Debug.Log(room.max.x + "/" + room.max.y  + "#" + room.x + "/" + room.y);
 
             //Build Walls
             //set all tiles within a rectangle to 1
@@ -141,7 +129,7 @@
                 Vector2Int roomCenter = Vector2Int.CeilToInt(room.center);
                 Array values = Enum.GetValues(typeof(MapUtils.CardinalFourDirections));
 
-                MapUtils.CardinalFourDirections randomDirection = (MapUtils.CardinalFourDirections)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+                MapUtils.CardinalFourDirections randomDirection = (MapUtils.CardinalFourDirections)values.GetValue(_random.Next(0, values.Length));
 
                 Vector2Int doorPosition = Vector2Int.zero;
                 switch (randomDirection)

@@ -97,19 +97,19 @@
             return true;
         }
 
-        public void CreateRooms<T>(BSPTreeMapGenerator<T> mapGenerator) where T : class, IMap, new()
+        public void CreateRooms<T>(BSPTreeMapGenerator<T> mapGenerator, int maxLeafSize, int roomMaxSize, int roomMinSize) where T : class, IMap, new()
         {
             if (childLeft != null || childRight != null)
             {
                 //# recursively search for children until you hit the end of the branch
                 if (childLeft != null)
                 {
-                    childLeft.CreateRooms(mapGenerator);
+                    childLeft.CreateRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
                 if (childRight != null)
                 {
-                    childRight.CreateRooms(mapGenerator);
+                    childRight.CreateRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
                 if (childLeft != null && childRight != null)
@@ -119,8 +119,8 @@
             }
             else
             {
-                int w = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, width - 1));
-                int h = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, height - 1));
+                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, width - 1));
+                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, height - 1));
                 int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
                 int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
             
@@ -130,19 +130,19 @@
             }
         }
 
-        public void CreateCityRooms<T>(CityMapGenerator<T> mapGenerator) where T : class, IMap, new()
+        public void CreateCityRooms<T>(CityMapGenerator<T> mapGenerator, int maxLeafSize, int roomMaxSize, int roomMinSize) where T : class, IMap, new()
         {
             if (childLeft != null || childRight != null)
             {
                 //# recursively search for children until you hit the end of the branch
                 if (childLeft != null)
                 {
-                    childLeft.CreateCityRooms(mapGenerator);
+                    childLeft.CreateCityRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
                 if (childRight != null)
                 {
-                    childRight.CreateCityRooms(mapGenerator);
+                    childRight.CreateCityRooms(mapGenerator, maxLeafSize, roomMaxSize, roomMinSize);
                 }
 
                 if (childLeft != null && childRight != null)
@@ -152,8 +152,8 @@
             }
             else
             {
-                int w = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, width - 1));
-                int h = UnityEngine.Random.Range(mapGenerator.roomMinSize, Math.Min(mapGenerator.maxLeafSize, height - 1));
+                int w = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, width - 1));
+                int h = UnityEngine.Random.Range(roomMinSize, Math.Min(roomMaxSize, height - 1));
                 int x = UnityEngine.Random.Range(_x, _x + (width - 1) - w);
                 int y = UnityEngine.Random.Range(_y, _y + (height - 1) - h);
                 
@@ -194,7 +194,7 @@
             {
                 return _room2;
             }
-            else if (Convert.ToBoolean(UnityEngine.Random.Range(0, 1)))
+            else if (Convert.ToBoolean(_random.Next(0, 1)))
             {
                 return _room1;
             }
