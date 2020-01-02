@@ -4,10 +4,9 @@
     using UnityEngine;
 
     /// <summary>
-    /// The City Walls algorithm is very similar to the BSP Tree above. In fact their main difference is in how they generate rooms after the actual tree has been created. Instead of 
-	/// starting with an array of solid walls and carving out rooms connected by tunnels, the City Walls generator starts with an array of floor tiles, then creates only the
-	/// exterior of the rooms, then opens one wall for a door.	
+    /// TunnelingMazeMapGenerator is a technique to build mazes that can grow without limits in all directions, differently from a traditional maze that is bounded by its outer walls.
     /// </summary>
+    /// <seealso href="http://roguebasin.roguelikedevelopment.org/index.php?title=Dynamically_Sized_Maze">Dynamically Sized Maze RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class TunnelingMazeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {  
@@ -24,10 +23,6 @@
 
         private T _map;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="size">The size of the Map to be created</param>        
         public TunnelingMazeMapGenerator(int width, int height, int magicNumber, System.Random random)
         {
             _width = width;
@@ -39,11 +34,7 @@
 
             _tiles = new int[_maxTileWidth, _maxTileHeight];
         }
-
-        /// <summary>
-        /// Creates a Map of the specified type by making an empty map with only the outermost border being solid walls
-        /// </summary>
-        /// <returns>An IMap of the specified type</returns>
+        
         public T CreateMap()
         {
             _map = new T();

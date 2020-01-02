@@ -4,10 +4,9 @@
     using UnityEngine;
 
     /// <summary>
-    /// The City Walls algorithm is very similar to the BSP Tree above. In fact their main difference is in how they generate rooms after the actual tree has been created. Instead of 
-	/// starting with an array of solid walls and carving out rooms connected by tunnels, the City Walls generator starts with an array of floor tiles, then creates only the
-	/// exterior of the rooms, then opens one wall for a door.	
+    /// DFSMazeMapGenerator use a Depth-First Search Maze algorithm.
     /// </summary>
+    /// <seealso href="http://roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze">Simple maze description RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class DFSMazeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
@@ -18,22 +17,14 @@
         private System.Random _random;
 
         private T _map;
-
-        /// <summary>
-        /// Constructs a new BorderOnlyMapCreationStrategy with the specified parameters
-        /// </summary>
-        /// <param name="size">The size of the Map to be created</param>        
+      
         public DFSMazeMapGenerator(int mapWidth, int mapHeight, System.Random random)
         {
             _width = mapWidth;
             _height = mapHeight;
             _random = random;
         }
-
-        /// <summary>
-        /// Creates a Map of the specified type by making an empty map with only the outermost border being solid walls
-        /// </summary>
-        /// <returns>An IMap of the specified type</returns>
+        
         public T CreateMap()
         {
             _map = new T();

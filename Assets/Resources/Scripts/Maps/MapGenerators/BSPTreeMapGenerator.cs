@@ -5,9 +5,9 @@
     using UnityEngine;
 
     /// <summary>
-    /// The CaveMapCreationStrategy creates a Map of the specified type by using a cellular automata algorithm for creating a cave-like map.
+    /// The BSPTreeMapGenerator creates a Map of the specified type by making an empty map with only the outermost border being solid walls
     /// </summary>
-    /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
+    /// <seealso href="http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation">Cellular Automata Method RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class BSPTreeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
@@ -21,15 +21,7 @@
 
         private T _map;
         private List<Leaf> _leafs = new List<Leaf>();
-
-        /// <summary>
-        /// Constructs a new BSPTreeMapCreationStrategy with the specified parameters
-        /// </summary>
-        /// <param name="width">The width of the Map to be created</param>
-        /// <param name="height">The height of the Map to be created</param>
-        /// <param name="maxRooms">The maximum number of rooms that will exist in the generated Map</param>
-        /// <param name="roomMaxSize">The maximum width and height of each room that will be generated in the Map</param>
-        /// <param name="roomMinSize">The minimum width and height of each room that will be generated in the Map</param>
+        
         public BSPTreeMapGenerator(int width, int height, int maxLeafSize, int minLeafSize, int roomMaxSize, int roomMinSize, System.Random random)
         {
             _width = width;
@@ -43,15 +35,6 @@
             _map = new T();
         }
 
-        /// <summary>
-        /// Creates a new IMap of the specified type.
-        /// </summary>
-        /// <remarks>
-        /// The map will be generated using cellular automata. First each cell in the map will be set to a floor or wall randomly based on the specified fillProbability.
-        /// Next each cell will be examined a number of times, and in each iteration it may be turned into a wall if there are enough other walls near it.
-        /// Once finished iterating and examining neighboring cells, any isolated map regions will be connected with paths.
-        /// </remarks>
-        /// <returns>An IMap of the specified type</returns>
         public T CreateMap()
         {
             _map.Initialize(_width, _height);

@@ -4,9 +4,9 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// The CaveMapCreationStrategy creates a Map of the specified type by using a cellular automata algorithm for creating a cave-like map.
+    /// The DrunkardsWalkMapGenerator generating a level with a single drunkard's walk is guaranteed to produce a fully connected level, with a highly variable mix of narrow paths and open spaces.
     /// </summary>
-    /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
+    /// <seealso href="http://www.roguebasin.com/index.php?title=Random_Walk_Cave_Generation">Random Walk Cave Generation RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class DrunkardsWalkMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {

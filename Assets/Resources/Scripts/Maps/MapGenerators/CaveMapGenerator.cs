@@ -5,9 +5,9 @@
     using UnityEngine;
 
     /// <summary>
-    /// The CaveMapCreationStrategy creates a Map of the specified type by using a cellular automata algorithm for creating a cave-like map.
+    /// The CaveMapGenerator creates a Map of the specified type by using a complex cave system for generated map.
     /// </summary>
-    /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
+    /// <seealso href="https://www.evilscience.co.uk/a-c-algorithm-to-build-roguelike-cave-systems-part-1/">An implementation of cave system</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class CaveMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
@@ -26,29 +26,14 @@
         private readonly int _corridor_Max;
         private readonly int _breakOut;
         private readonly System.Random _random;
-        /// <summary>
-        /// Caves within the map are stored here
-        /// </summary>
-        private List<List<Vector2Int>> _caves;
 
-        /// <summary>
-        /// Corridors within the map stored here
-        /// </summary>
+        private List<List<Vector2Int>> _caves;
         private List<Vector2Int> _corridors;
 
         private T _map;
-
-        /// <summary>
-        /// Constructs a new CaveMapCreationStrategy with the specified parameters
-        /// </summary>
-        /// <param name="width">The width of the Map to be created</param>
-        /// <param name="height">The height of the Map to be created</param>
-        /// <param name="fillProbability">Recommend int between 40 and 60. Percent chance that a given cell will be a floor when randomizing all cells.</param>
-        /// <param name="totalIterations">Recommend int between 2 and 5. Number of times to execute the cellular automata algorithm.</param>
-        /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>
-        /// <param name="random">A class implementing IRandom that will be used to generate pseudo-random numbers necessary to create the Map</param>
+        
         public CaveMapGenerator(int width, int height, int neighbours, int iterations, int closeTileProb, int lowerLimit, int upperLimit, int emptyNeighbours,
-                                       int emptyTileNeighbours, int corridorSpace, int corridor_MaxTurns, int corridor_Min, int corridor_Max, int breakOut, System.Random random)
+                                       int emptyTileNeighbours, int corridorSpace, int corridorMaxTurns, int corridorMin, int corridorMax, int breakOut, System.Random random)
         {
             _width = width;
             _height = height;
@@ -60,24 +45,15 @@
             _emptyNeighbours = emptyNeighbours;
             _emptyTileNeighbours = emptyTileNeighbours;
             _corridorSpace = corridorSpace;
-            _corridor_MaxTurns = corridor_MaxTurns;
-            _corridor_Min = corridor_Min;
-            _corridor_Max = corridor_Max;
+            _corridor_MaxTurns = corridorMaxTurns;
+            _corridor_Min = corridorMin;
+            _corridor_Max = corridorMax;
             _breakOut = breakOut;
             _random = random;
 
             _map = new T();
         }
 
-        /// <summary>
-        /// Creates a new IMap of the specified type.
-        /// </summary>
-        /// <remarks>
-        /// The map will be generated using cellular automata. First each cell in the map will be set to a floor or wall randomly based on the specified fillProbability.
-        /// Next each cell will be examined a number of times, and in each iteration it may be turned into a wall if there are enough other walls near it.
-        /// Once finished iterating and examining neighboring cells, any isolated map regions will be connected with paths.
-        /// </remarks>
-        /// <returns>An IMap of the specified type</returns>
         public T CreateMap()
         {
             _map.Initialize(_width, _height);
@@ -166,10 +142,7 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Locate all the caves within the map and place each one into the generic list Caves
-        /// </summary>
+        
         private void GetCaves()
         {
             _caves = new List<List<Vector2Int>>();
@@ -213,12 +186,6 @@
 
         }
 
-        /// <summary>
-        /// Recursive method to locate the cells comprising a cave, 
-        /// based on flood fill algorithm
-        /// </summary>
-        /// <param name="cell">Cell being examined</param>
-        /// <param name="current">List containing all the cells in the cave</param>
         private void LocateCave(Vector2Int tilePosition, List<Vector2Int> cave)
         {
             foreach (Vector2Int p in NeighboursGetFourDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Tile.type.Equals(Tile.Type.Block)))
@@ -230,10 +197,7 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Attempt to connect the caves together
-        /// </summary>
+        
         public bool ConnectCaves()
         {
             if (_caves.Count() == 0)
@@ -331,13 +295,6 @@
             return true;
         }
 
-        /// <summary>
-        /// Locate the edge of the specified cave
-        /// </summary>
-        /// <param name="pCaveNumber">Cave to examine</param>
-        /// <param name="pCavePoint">Point on the edge of the cave</param>
-        /// <param name="pDirection">Direction to start formting the tunnel</param>
-        /// <returns>Boolean indicating if an edge was found</returns>
         private void CaveGetEdge(List<Vector2Int> pCave, ref Vector2Int pCavePoint, ref Vector2Int pDirection)
         {
             do
@@ -363,12 +320,7 @@
                 } while (true);
             } while (true);
         }
-
-        // <summary>
-        /// Randomly get a point on an existing corridor
-        /// </summary>
-        /// <param name="Location">Out: location of point</param>
-        /// <returns>Bool indicating success</returns>
+        
         private void CorridorGetEdge(ref Vector2Int pLocation, ref Vector2Int pDirection)
         {
             List<Vector2Int> validdirections = new List<Vector2Int>();
@@ -397,13 +349,6 @@
             pLocation += pDirection;
         }
 
-        /// <summary>
-        /// Attempt to build a corridor
-        /// </summary>
-        /// <param name="pStart"></param>
-        /// <param name="pDirection"></param>
-        /// <param name="pPreventBackTracking"></param>
-        /// <returns></returns>
         private List<Vector2Int> CorridorAttempt(Vector2Int pStart, Vector2Int pDirection, bool pPreventBackTracking)
         {
 
@@ -493,13 +438,7 @@
 
             return true;
         }
-
-
-        /// <summary>
-        /// Get a random direction, provided it isn't equal to the opposite one provided
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
+        
         private Vector2Int FourDirectiosnGet(Vector2Int p)
         {
             Vector2Int newdir;
@@ -512,19 +451,7 @@
 
             return newdir;
         }
-
-        /// <summary>
-        /// Get a random direction, excluding the provided directions and the opposite of 
-        /// the provided direction to prevent a corridor going back on it's self.
-        /// 
-        /// The parameter pDirExclude is the first direction chosen for a corridor, and
-        /// to prevent it from being used will prevent a corridor from going back on 
-        /// it'self
-        /// </summary>
-        /// <param name="dir">Current direction</param>
-        /// <param name="pDirectionList">Direction to exclude</param>
-        /// <param name="pDirExclude">Direction to exclude</param>
-        /// <returns></returns>
+        
         private Vector2Int FourDirectiosnGet(Vector2Int pDir, Vector2Int pDirExclude)
         {
             Vector2Int NewDir;
@@ -538,42 +465,22 @@
 
             return NewDir;
         }
-
-        /// <summary>
-        /// Return reverse direction
-        /// using north => south
-        /// </summary>
+       
         private Vector2Int DirectionReverse(Vector2Int pDir)
         {
             return new Vector2Int(-pDir.x, -pDir.y);
         }
-
-
-        /// <summary>
-        /// Return a list of the valid neighbouring cells of the provided point
-        /// using only north, south, east and west
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
+        
         private List<Vector2Int> NeighboursGetFourDirections(Vector2Int tilePosition)
         {
             return MapUtils.FourDirections.Select(direction => new Vector2Int(tilePosition.x + direction.x, tilePosition.y + direction.y)).Where(direction => TilePositionCheck(direction)).ToList();
         }
-
-        /// <summary>
-        /// Return a list of the valid neighbouring cells of the provided point        
-        /// using north, south, east, ne, nw, se, sw
-        /// </summary>
+        
         private List<Vector2Int> NeighboursGetNineDirections(Vector2Int tilePosition)
         {
             return MapUtils.NineDirections.Select(direction => new Vector2Int(tilePosition.x + direction.x, tilePosition.y + direction.y)).Where(direction => TilePositionCheck(direction)).ToList();
         }
-
-        /// <summary>
-        /// Check if the provided point is valid
-        /// </summary>
-        /// <param name="p">Point to check</param>
-        /// <returns></returns>
+        
         private bool TilePositionCheck(Vector2Int tilePosition)
         {
             return tilePosition.x >= 0 & tilePosition.x < _width & tilePosition.y >= 0 & tilePosition.y < _height;

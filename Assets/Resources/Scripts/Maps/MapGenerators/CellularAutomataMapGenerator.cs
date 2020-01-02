@@ -5,8 +5,7 @@
     using UnityEngine;
 
     /// <summary>
-    /// Rather than implement a traditional cellular automata, I decided to try my hand at a method discribed by "Evil Scientist" Andy Stobirski that I recently learned about
-    /// on the Grid Sage Games blog.	
+    /// The CellularAutomataMapGenerator use a classic Cellular Automata Method for Generating Random Cave-Like Levels.
     /// </summary>
     /// <seealso href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Cellular Automata Method from RogueBasin</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
@@ -20,15 +19,7 @@
         private readonly System.Random _random;
 
         private T _map;
-
-        /// <summary>
-        /// Constructs a new CaveMapCreationStrategy with the specified parameters
-        /// </summary>
-        /// <param name="width">The width of the Map to be created</param>
-        /// <param name="height">The height of the Map to be created</param>
-        /// <param name="fillProbability">Recommend int between 40 and 60. Percent chance that a given cell will be a floor when randomizing all cells.</param>
-        /// <param name="totalIterations">Recommend int between 2 and 5. Number of times to execute the cellular automata algorithm.</param>
-        /// <param name="cutoffOfBigAreaFill">Recommend int less than 4. The iteration number to switch from the large area fill algorithm to a nearest neighbor algorithm</param>        
+            
         public CellularAutomataMapGenerator(int width, int height, int fillProbability, int totalIterations, int cutoffOfBigAreaFill, System.Random random)
         {
             _width = width;
@@ -40,16 +31,7 @@
 
             _map = new T();
         }
-
-        /// <summary>
-        /// Creates a new IMap of the specified type.
-        /// </summary>
-        /// <remarks>
-        /// The map will be generated using cellular automata. First each cell in the map will be set to a floor or wall randomly based on the specified fillProbability.
-        /// Next each cell will be examined a number of times, and in each iteration it may be turned into a wall if there are enough other walls near it.
-        /// Once finished iterating and examining neighboring cells, any isolated map regions will be connected with paths.
-        /// </remarks>
-        /// <returns>An IMap of the specified type</returns>
+       
         public T CreateMap()
         {
             _map.Initialize(_width, _height);
