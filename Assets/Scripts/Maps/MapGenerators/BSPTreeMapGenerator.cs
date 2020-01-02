@@ -7,7 +7,7 @@
     /// <summary>
     /// The BSPTreeMapGenerator creates a Map of the specified type by making an empty map with only the outermost border being solid walls
     /// </summary>
-    /// <seealso href="http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation">Cellular Automata Method RogueBasin</seealso>
+    /// <seealso href="http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation">BSP Dungeon Generation</seealso>
     /// <typeparam name="T">The type of IMap that will be created</typeparam>
     public class BSPTreeMapGenerator<T> : IMapGenerator<T> where T : class, IMap, new()
     {
