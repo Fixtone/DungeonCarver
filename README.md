@@ -6,7 +6,8 @@ up when talking about roguelikes. This implementation use C# and Unity to render
 lenguajes or other engines.
 
 #### Screenshot
-![Screenshot software](https://imgur.com/WlDSGv0)
+![ScreenShot](https://https://imgur.com/WlDSGv0)
+
 
 ## Usage
 ```$ git clone https://github.com/Fixtone/DungeonCarver.git
