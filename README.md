@@ -5,8 +5,16 @@ is an implementation of the most popular dungeon generating algorithms that are 
 up when talking about roguelikes. This implementation use C# and Unity to render the dungeons but should be easy port to other programming 
 lenguajes or other engines.
 
-#### Screenshot
-![ScreenShot](https://https://imgur.com/WlDSGv0)
+#### Screenshots
+![BorderOnlyMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_1.jpg)
+![BSPTreeMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_2.jpg)
+![CaveMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_3.jpg)
+![CellularAutomataMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_4.jpg)
+![CityMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_5.jpg)
+![DFSMazeMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_6.jpg)
+![DrunkardsWalkMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_7.jpg)
+![TunnelingMazeMapGenerator ](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_8.jpg)
+![TunnelingWithRoomsMapGenerator](https://github.com/Fixtone/DungeonCarver/blob/master/Assets/Images/Dungeon_9.jpg)
 
 
 ## Usage
