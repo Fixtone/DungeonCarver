@@ -1,8 +1,7 @@
 ![Dungeon Carver](https://github.com/Fixtone/DungeonCarver/blob/master/Images/Dungeon_Carver.png)
 ======
 **DungeonCarver** is an implementation of the most popular dungeon generating algorithms that are often brought 
-up when talking about roguelikes. This implementation use C# and Unity to render the dungeons but should be easy port to other programming 
-lenguajes or other engines.
+up when talking about roguelikes. This implementation use C# and Unity to render the dungeons but should be easy port to other programming languages or other engines.
 
 #### Screenshots
 BorderOnlyMapGenerator
