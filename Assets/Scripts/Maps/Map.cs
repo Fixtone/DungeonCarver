@@ -5,8 +5,8 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// A Map represents a rectangular grid of Cells, each of which has a number of properties for determining walkability, field-of-view and so on
-    /// The upper left corner of the Map is Cell (0,0) and the X value increases to the right, as the Y value increases downward
+    /// A Map represents a rectangular grid of Tiles, each of which has a number of properties for determining walkability
+    /// The upper left corner of the Map is Tiles (0,0) and the X value increases to the right, as the Y value increases downward
     /// </summary>
     public class Map : IMap
     {
@@ -21,9 +21,6 @@
             get; private set;
         }
 
-        /// <summary>
-        /// Constructor creates a new uninitialized Map
-        /// </summary>
         public Map()
         {
         }
@@ -78,14 +75,7 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Get an IEnumerable of Cells in a square area around the center Cell up to the specified distance
-        /// </summary>
-        /// <param name="xCenter">X location of the center Cell with 0 as the farthest left</param>
-        /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
-        /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
-        /// <returns>IEnumerable of Cells in a square area around the center Cell</returns>
+        
         public IEnumerable<TileData> GetTilesInSquare(int xCenter, int yCenter, int distance)
         {
             int xMin = Math.Max(0, xCenter - distance);
@@ -101,17 +91,7 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Get an IEnumerable of Cells in a line from the Origin Cell to the Destination Cell
-        /// The resulting IEnumerable includes the Origin and Destination Cells
-        /// Uses Bresenham's line algorithm to determine which Cells are in the closest approximation to a straight line between the two Cells
-        /// </summary>
-        /// <param name="xOrigin">X location of the Origin Cell at the start of the line with 0 as the farthest left</param>
-        /// <param name="yOrigin">Y location of the Origin Cell at the start of the line with 0 as the top</param>
-        /// <param name="xDestination">X location of the Destination Cell at the end of the line with 0 as the farthest left</param>
-        /// <param name="yDestination">Y location of the Destination Cell at the end of the line with 0 as the top</param>
-        /// <returns>IEnumerable of Cells in a line from the Origin Cell to the Destination Cell which includes the Origin and Destination Cells</returns>
+      
         public IEnumerable<TileData> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
             xOrigin = ClampX(xOrigin);
@@ -167,11 +147,6 @@
             return mapCreationStrategy.CreateMap();
         }
 
-        /// <summary>
-        /// Create and return a deep copy of an existing Map.
-        /// Override when a derived class has additional properties to clone.
-        /// </summary>
-        /// <returns>T of type IMap which is a deep copy of the original Map</returns>
         public virtual T Clone<T>() where T : IMap, new()
         {
             T map = Create(new BorderOnlyMapGenerator<T>(Width, Height));
@@ -197,7 +172,5 @@
         {
             return (y < 0) ? 0 : (y > Height - 1) ? Height - 1 : y;
         }
-
-
     }
 }
