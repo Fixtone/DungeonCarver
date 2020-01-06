@@ -1,5 +1,7 @@
 ﻿namespace DungeonCarver
 {
+    using UnityEngine;
+
     /// <summary>
     /// The BorderOnlyMapGenerator creates a Map of the specified type by making an empty map with only the outermost border being solid walls
     /// </summary>
@@ -21,9 +23,14 @@
             map.Initialize(_width, _height);
             map.Clear(new Tile(Tile.Type.Empty));
 
-            foreach (TileData tileData in map.GetTilesInRows(0, _height - 1))
+            //foreach (TileData tileData in map.GetTilesInRows(0, _height - 1))
+            //{
+            //    map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
+            //}
+
+            foreach ((Vector2Int tilePosition, Tile tile) tileInfo in map.GetTilesInRows2(0, _height - 1))
             {
-                map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
+                map.SetTile(tileInfo.tilePosition.x, tileInfo.tilePosition.y, new Tile(Tile.Type.Block));
             }
 
             foreach (TileData tileData in map.GetTilesInColumns(0, _width - 1))

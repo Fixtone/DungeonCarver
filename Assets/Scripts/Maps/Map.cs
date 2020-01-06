@@ -65,6 +65,17 @@
             }
         }
 
+        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInRows2(params int[] rowNumbers)
+        {
+            foreach (int y in rowNumbers)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    yield return (new Vector2Int(x,y), new Tile(Tile.Type.Block));
+                }
+            }
+        }
+
         public IEnumerable<TileData> GetTilesInColumns(params int[] columnNumbers)
         {
             foreach (int x in columnNumbers)

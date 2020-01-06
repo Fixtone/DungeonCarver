@@ -27,6 +27,8 @@
 
         IEnumerable<TileData> GetTilesInRows(params int[] rowNumbers);
 
+        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInRows2(params int[] rowNumbers);
+
         IEnumerable<TileData> GetTilesInColumns(params int[] columnNumbers);
 
         IEnumerable<TileData> GetTilesInSquare(int xCenter, int yCenter, int distance);
