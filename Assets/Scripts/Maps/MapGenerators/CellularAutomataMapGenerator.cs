@@ -58,19 +58,19 @@
 
         private void RandomlyFillCells()
         {
-            foreach (TileData tileData in _map.GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
             {
-                if (_map.IsBorderTile(tileData.Position))
+                if (_map.IsBorderTile(tileData.tilePosition))
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
+                    _map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Block));
                 }
                 else if (_random.Next(1, 100) < _fillProbability)
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
+                    _map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Empty));
                 }
                 else
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
+                    _map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Block));
                 }
             }
         }
@@ -79,20 +79,20 @@
         {
             T updatedMap = _map.Clone<T>();
 
-            foreach (TileData tileData in _map.GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
             {
-                if (_map.IsBorderTile(tileData.Position))
+                if (_map.IsBorderTile(tileData.tilePosition))
                 {
                     continue;
                 }
 
                 if ((CountWallsNear(tileData, 1) >= 5) || (CountWallsNear(tileData, 2) <= 2))
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
+                    updatedMap.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Block));
                 }
                 else
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
+                    updatedMap.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Empty));
                 }
             }
 
@@ -103,37 +103,37 @@
         {
             T updatedMap = _map.Clone<T>();
 
-            foreach (TileData tileData in _map.GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
             {
-                if (_map.IsBorderTile(tileData.Position))
+                if (_map.IsBorderTile(tileData.tilePosition))
                 {
                     continue;
                 }
 
                 if (CountWallsNear(tileData, 1) >= 5)
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Block));
+                    updatedMap.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Block));
                 }
                 else
                 {
-                    updatedMap.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
+                    updatedMap.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Empty));
                 }
             }
 
             _map = updatedMap;
         }
 
-        private int CountWallsNear(TileData tileData, int distance)
+        private int CountWallsNear((Vector2Int tilePosition, Tile tile) tileData, int distance)
         {
             int count = 0;
-            foreach (TileData nearbyCell in _map.GetTilesInSquare(tileData.Position.x, tileData.Position.y, distance))
+            foreach ((Vector2Int tilePosition, Tile tile) nearbyCell in _map.GetTilesInSquare(tileData.tilePosition.x, tileData.tilePosition.y, distance))
             {
-                if (nearbyCell.Position.x == tileData.Position.x && nearbyCell.Position.y == tileData.Position.y)
+                if (nearbyCell.tilePosition.x == tileData.tilePosition.x && nearbyCell.tilePosition.y == tileData.tilePosition.y)
                 {
                     continue;
                 }
 
-                if (nearbyCell.Tile.type.Equals(Tile.Type.Block))
+                if (nearbyCell.tile.type.Equals(Tile.Type.Block))
                 {
                     count++;
                 }
@@ -154,19 +154,19 @@
                 {
                     int closestMapSectionIndex = FindNearestMapSection(mapSections, i, unionFind);
                     MapSection closestMapSection = mapSections[closestMapSectionIndex];
-                    IEnumerable<TileData> tunnelTiles = _map.GetCellsAlongLine((int)mapSections[i].Bounds.center.x, (int)mapSections[i].Bounds.center.y,
+                    IEnumerable<(Vector2Int tilePosition, Tile tile)> tunnelTiles = _map.GetCellsAlongLine((int)mapSections[i].Bounds.center.x, (int)mapSections[i].Bounds.center.y,
                        (int)closestMapSection.Bounds.center.x, (int)closestMapSection.Bounds.center.y);
 
-                    TileData previousTile = null;
-                    foreach (TileData tileData in tunnelTiles)
+                    (Vector2Int tilePosition, Tile tile) previousTile = (Vector2Int.zero, null);
+                    foreach ((Vector2Int tilePosition, Tile tile) tileData in tunnelTiles)
                     {
-                        _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
+                        _map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Empty));
 
-                        if (previousTile != null)
+                        if (previousTile.tile != null)
                         {
-                            if (tileData.Position.x != previousTile.Position.x || tileData.Position.y != previousTile.Position.y)
+                            if (tileData.tilePosition.x != previousTile.tilePosition.x || tileData.tilePosition.y != previousTile.tilePosition.y)
                             {
-                                _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
+                                _map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Empty));
                             }
                         }
                         previousTile = tileData;
@@ -233,8 +233,8 @@
 
             public List<MapSection> GetMapSections()
             {
-                IEnumerable<TileData> tilesData = _map.GetAllTiles();
-                foreach (TileData tileData in tilesData)
+                IEnumerable<(Vector2Int tilePosition, Tile tile)> tilesData = _map.GetAllTiles();
+                foreach ((Vector2Int tilePosition, Tile tile) tileData in tilesData)
                 {
                     MapSection section = Visit(tileData);
                     if (section.Tiles.Count > 0)
@@ -246,25 +246,25 @@
                 return _mapSections;
             }
 
-            private MapSection Visit(TileData tileData)
+            private MapSection Visit((Vector2Int tilePosition, Tile tile) tileData)
             {
-                Stack<TileData> stack = new Stack<TileData>(new List<TileData>());
+                Stack<(Vector2Int tilePosition, Tile tile)> stack = new Stack<(Vector2Int tilePosition, Tile tile)>(new List<(Vector2Int tilePosition, Tile tile)>());
                 MapSection mapSection = new MapSection();
                 stack.Push(tileData);
                 while (stack.Count != 0)
                 {
                     tileData = stack.Pop();
-                    if (_visited[tileData.Position.y][tileData.Position.x] || tileData.Tile.Equals(Tile.Type.Block))
+                    if (_visited[tileData.tilePosition.y][tileData.tilePosition.x] || tileData.Equals(Tile.Type.Block))
                     {
                         continue;
                     }
 
                     mapSection.AddTile(tileData);
-                    _visited[tileData.Position.y][tileData.Position.x] = true;
+                    _visited[tileData.tilePosition.y][tileData.tilePosition.x] = true;
 
-                    foreach (TileData neighbor in GetNeighbors(tileData))
+                    foreach ((Vector2Int tilePosition, Tile tile) neighbor in GetNeighbors(tileData))
                     {
-                        if (tileData.Tile.Equals(Tile.Type.Empty) == neighbor.Tile.Equals(Tile.Type.Empty) && !_visited[neighbor.Position.y][neighbor.Position.x])
+                        if (tileData.Equals(Tile.Type.Empty) == neighbor.Equals(Tile.Type.Empty) && !_visited[neighbor.tilePosition.y][neighbor.tilePosition.x])
                         {
                             stack.Push(neighbor);
                         }
@@ -273,30 +273,17 @@
                 return mapSection;
             }
 
-            private TileData GetTile(int x, int y)
+            private IEnumerable<(Vector2Int tilePosition, Tile tile)> GetNeighbors((Vector2Int tilePosition, Tile tile) tileData)
             {
-                if (x < 0 || y < 0)
-                {
-                    return null;
-                }
-                if (x >= _map.Width || y >= _map.Height)
-                {
-                    return null;
-                }
-                return _map.GetTile(x, y);
-            }
-
-            private IEnumerable<TileData> GetNeighbors(TileData tileData)
-            {
-                List<TileData> neighbors = new List<TileData>(8);
+                List<(Vector2Int tilePosition, Tile tile)> neighbors = new List<(Vector2Int tilePosition, Tile tile)>(8);
                 foreach (int[] offset in _offsets)
                 {
-                    TileData neighbor = GetTile(tileData.Position.x + offset[0], tileData.Position.y + offset[1]);
+                    Tile neighbor = _map.GetTile(tileData.tilePosition.x + offset[0], tileData.tilePosition.y + offset[1]);
                     if (neighbor == null)
                     {
                         continue;
                     }
-                    neighbors.Add(neighbor);
+                    neighbors.Add((new Vector2Int(tileData.tilePosition.x + offset[0], tileData.tilePosition.y + offset[1]), neighbor));
                 }
 
                 return neighbors;
@@ -312,44 +299,44 @@
 
             public RectInt Bounds => new RectInt(_left, _top, _right - _left + 1, _bottom - _top + 1);
 
-            public HashSet<TileData> Tiles
+            public HashSet<(Vector2Int tilePosition, Tile tile)> Tiles
             {
                 get; private set;
             }
 
             public MapSection()
             {
-                Tiles = new HashSet<TileData>();
+                Tiles = new HashSet<(Vector2Int tilePosition, Tile tile)>();
                 _top = int.MaxValue;
                 _left = int.MaxValue;
             }
 
-            public void AddTile(TileData tileData)
+            public void AddTile((Vector2Int tilePosition, Tile tile) tileData)
             {
                 Tiles.Add(tileData);
                 UpdateBounds(tileData);
             }
 
-            private void UpdateBounds(TileData tileData)
+            private void UpdateBounds((Vector2Int tilePosition, Tile tile) tileData)
             {
-                if (tileData.Position.x > _right)
+                if (tileData.tilePosition.x > _right)
                 {
-                    _right = tileData.Position.x;
+                    _right = tileData.tilePosition.x;
                 }
 
-                if (tileData.Position.x < _left)
+                if (tileData.tilePosition.x < _left)
                 {
-                    _left = tileData.Position.x;
+                    _left = tileData.tilePosition.x;
                 }
 
-                if (tileData.Position.y > _bottom)
+                if (tileData.tilePosition.y > _bottom)
                 {
-                    _bottom = tileData.Position.y;
+                    _bottom = tileData.tilePosition.y;
                 }
 
-                if (tileData.Position.y < _top)
+                if (tileData.tilePosition.y < _top)
                 {
-                    _top = tileData.Position.y;
+                    _top = tileData.tilePosition.y;
                 }
             }
         }

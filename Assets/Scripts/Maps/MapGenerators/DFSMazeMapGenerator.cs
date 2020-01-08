@@ -47,7 +47,7 @@
             }
 
             //visited, go back the the coming direction, return 
-            if (!_map.GetTile(i, j).Tile.type.Equals(Tile.Type.Block))
+            if (!_map.GetTile(i, j).type.Equals(Tile.Type.Block))
             {
                 return;
             }
@@ -85,7 +85,7 @@
                 }
 
                 //visited
-                if (!_map.GetTile(ni, nj).Tile.type.Equals(Tile.Type.Block))
+                if (!_map.GetTile(ni, nj).type.Equals(Tile.Type.Block))
                 {
                     count++;
                 }

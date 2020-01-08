@@ -10,7 +10,7 @@
     /// </summary>
     public class Map : IMap
     {
-        private TileData[,] mTerrain;
+        private Tile[,] mTerrain;
 
         public int Width
         {
@@ -29,7 +29,7 @@
         {
             Width = width;
             Height = height;
-            mTerrain = new TileData[Width, Height];
+            mTerrain = new Tile[Width, Height];
         }
 
         public void Clear(Tile tile)
@@ -43,51 +43,40 @@
             }
         }
 
-        public IEnumerable<TileData> GetAllTiles()
+        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetAllTiles()
         {
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    yield return GetTile(x, y);
+                    yield return (new Vector2Int(x, y), GetTile(x, y));
                 }
             }
         }
 
-        public IEnumerable<TileData> GetTilesInRows(params int[] rowNumbers)
+        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInRows(params int[] rowNumbers)
         {
             foreach (int y in rowNumbers)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    yield return GetTile(x, y);
+                    yield return (new Vector2Int(x, y), GetTile(x, y));
                 }
             }
         }
 
-        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInRows2(params int[] rowNumbers)
-        {
-            foreach (int y in rowNumbers)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    yield return (new Vector2Int(x,y), new Tile(Tile.Type.Block));
-                }
-            }
-        }
-
-        public IEnumerable<TileData> GetTilesInColumns(params int[] columnNumbers)
+        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInColumns(params int[] columnNumbers)
         {
             foreach (int x in columnNumbers)
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    yield return GetTile(x, y);
+                    yield return (new Vector2Int(x, y), GetTile(x, y));
                 }
             }
         }
         
-        public IEnumerable<TileData> GetTilesInSquare(int xCenter, int yCenter, int distance)
+        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInSquare(int xCenter, int yCenter, int distance)
         {
             int xMin = Math.Max(0, xCenter - distance);
             int xMax = Math.Min(Width - 1, xCenter + distance);
@@ -98,12 +87,12 @@
             {
                 for (int x = xMin; x <= xMax; x++)
                 {
-                    yield return GetTile(x, y);
+                    yield return (new Vector2Int(x, y), GetTile(x, y));
                 }
             }
         }
       
-        public IEnumerable<TileData> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
+        public IEnumerable<(Vector2Int tilePosition, Tile tile)> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
             xOrigin = ClampX(xOrigin);
             yOrigin = ClampY(yOrigin);
@@ -119,7 +108,7 @@
 
             while (true)
             {
-                yield return GetTile(xOrigin, yOrigin);
+                yield return (new Vector2Int(xOrigin, yOrigin), GetTile(xOrigin, yOrigin));
                 if (xOrigin == xDestination && yOrigin == yDestination)
                 {
                     break;
@@ -138,14 +127,21 @@
             }
         }
 
-        public TileData GetTile(int x, int y)
+        public Tile GetTile(int x, int y)
         {
-            return mTerrain[x, y];
+            if(x < 0 || y <0 || x >= Width || y >= Height )
+            {
+                return null;
+            }
+            else
+            {
+                return mTerrain[x, y];
+            }            
         }
 
         public void SetTile(int x, int y, Tile tile)
         {            
-            mTerrain[x, y] = new TileData(tile, new Vector2Int(x, y));
+            mTerrain[x, y] = tile;
         }
 
         public static T Create<T>(IMapGenerator<T> mapCreationStrategy) where T : IMap
@@ -161,9 +157,9 @@
         public virtual T Clone<T>() where T : IMap, new()
         {
             T map = Create(new BorderOnlyMapGenerator<T>(Width, Height));
-            foreach (TileData tileData in GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in GetAllTiles())
             {
-                map.SetTile(tileData.Position.x, tileData.Position.y, tileData.Tile);
+                map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, tileData.tile);
             }
 
             return map;

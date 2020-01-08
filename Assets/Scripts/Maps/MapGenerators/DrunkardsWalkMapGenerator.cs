@@ -174,7 +174,7 @@
                 _drunkardX += dx;
                 _drunkardY += dy;
 
-                if (_map.GetTile(_drunkardX, _drunkardY).Tile.type.Equals(Tile.Type.Block))
+                if (_map.GetTile(_drunkardX, _drunkardY).type.Equals(Tile.Type.Block))
                 {
                     _map.SetTile(_drunkardX, _drunkardY, new Tile(Tile.Type.Empty));
                     _filled += 1.0f;

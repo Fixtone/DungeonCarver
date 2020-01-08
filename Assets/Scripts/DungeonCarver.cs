@@ -173,7 +173,7 @@
                 for (int y = 0; y < _map.Height; y++)
                 {
                     GameObject newTile = GameObject.Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity, dungeonParent);
-                    switch (_map.GetTile(x, y).Tile.type)
+                    switch (_map.GetTile(x, y).type)
                     {
                         case Tile.Type.Block:
                             {

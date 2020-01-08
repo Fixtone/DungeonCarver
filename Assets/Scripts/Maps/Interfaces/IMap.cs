@@ -23,19 +23,17 @@
         
         void Clear(Tile tile);
 
-        IEnumerable<TileData> GetAllTiles();
+        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetAllTiles();
 
-        IEnumerable<TileData> GetTilesInRows(params int[] rowNumbers);
+        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInRows(params int[] rowNumbers);
 
-        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInRows2(params int[] rowNumbers);
+        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInColumns(params int[] columnNumbers);
 
-        IEnumerable<TileData> GetTilesInColumns(params int[] columnNumbers);
+        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetTilesInSquare(int xCenter, int yCenter, int distance);
 
-        IEnumerable<TileData> GetTilesInSquare(int xCenter, int yCenter, int distance);
+        IEnumerable<(Vector2Int tilePosition, Tile tile)> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination);
 
-        IEnumerable<TileData> GetCellsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination);
-
-        TileData GetTile(int x, int y);
+        Tile GetTile(int x, int y);
 
         void SetTile(int x, int y, Tile tile);
 

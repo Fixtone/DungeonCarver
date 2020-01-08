@@ -68,16 +68,16 @@
 
         private void BuildCaves()
         {
-            foreach (TileData tileData in _map.GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
             {
-                if (_map.IsBorderTile(tileData.Position))
+                if (_map.IsBorderTile(tileData.tilePosition))
                 {
                     continue;
                 }
 
                 if (_random.Next(0, 100) < _closeTileProb)
                 {
-                    _map.SetTile(tileData.Position.x, tileData.Position.y, new Tile(Tile.Type.Empty));
+                    _map.SetTile(tileData.tilePosition.x, tileData.tilePosition.y, new Tile(Tile.Type.Empty));
                 }
             }
 
@@ -90,7 +90,7 @@
 
                 //if the randomly selected cell has more closed neighbours than the property Neighbours
                 //set it closed, else open it
-                if (NeighboursGetNineDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Tile.type.Equals(Tile.Type.Block)).Count() > _neighbours)
+                if (NeighboursGetNineDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).type.Equals(Tile.Type.Block)).Count() > _neighbours)
                 {
                     _map.SetTile(tilePosition.x, tilePosition.y, new Tile(Tile.Type.Empty));
                 }
@@ -107,16 +107,16 @@
             for (int ctr = 0; ctr < 5; ctr++)
             {
                 //examine each cell individually
-                foreach (TileData tileData in _map.GetAllTiles())
+                foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
                 {
-                    if (_map.IsBorderTile(tileData.Position))
+                    if (_map.IsBorderTile(tileData.tilePosition))
                     {
                         continue;
                     }
 
-                    tilePosition = tileData.Position;
+                    tilePosition = tileData.tilePosition;
 
-                    if (!_map.GetTile(tilePosition.x, tilePosition.y).Tile.type.Equals(Tile.Type.Block) && NeighboursGetFourDirections(tilePosition).Where(position => _map.GetTile(position.x, position.y).Tile.type.Equals(Tile.Type.Block)).Count() >= _emptyNeighbours)
+                    if (!_map.GetTile(tilePosition.x, tilePosition.y).type.Equals(Tile.Type.Block) && NeighboursGetFourDirections(tilePosition).Where(position => _map.GetTile(position.x, position.y).type.Equals(Tile.Type.Block)).Count() >= _emptyNeighbours)
                     {
                         _map.SetTile(tilePosition.x, tilePosition.y, new Tile(Tile.Type.Block));
                     }
@@ -127,16 +127,16 @@
             //  fill in any empty cells that have 4 full neighbours
             //  to get rid of any holes in an cave
             //
-            foreach (TileData tileData in _map.GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
             {
-                if (_map.IsBorderTile(tileData.Position))
+                if (_map.IsBorderTile(tileData.tilePosition))
                 {
                     continue;
                 }
 
-                tilePosition = tileData.Position;
+                tilePosition = tileData.tilePosition;
 
-                if (_map.GetTile(tilePosition.x, tilePosition.y).Tile.type.Equals(Tile.Type.Block) && NeighboursGetFourDirections(tilePosition).Where(postion => !_map.GetTile(postion.x, postion.y).Tile.type.Equals(Tile.Type.Block)).Count() >= _emptyTileNeighbours)
+                if (_map.GetTile(tilePosition.x, tilePosition.y).type.Equals(Tile.Type.Block) && NeighboursGetFourDirections(tilePosition).Where(postion => !_map.GetTile(postion.x, postion.y).type.Equals(Tile.Type.Block)).Count() >= _emptyTileNeighbours)
                 {
                     _map.SetTile(tilePosition.x, tilePosition.y, new Tile(Tile.Type.Empty));
                 }
@@ -151,17 +151,17 @@
             Vector2Int tilePosition;
 
             //examine each cell in the map...
-            foreach (TileData tileData in _map.GetAllTiles())
+            foreach ((Vector2Int tilePosition, Tile tile) tileData in _map.GetAllTiles())
             {
-                if (_map.IsBorderTile(tileData.Position))
+                if (_map.IsBorderTile(tileData.tilePosition))
                 {
                     continue;
                 }
 
-                tilePosition = tileData.Position;
+                tilePosition = tileData.tilePosition;
 
                 //if the cell is closed, and that cell doesn't occur in the list of caves..
-                if (!_map.GetTile(tilePosition.x, tilePosition.y).Tile.type.Equals(Tile.Type.Block) && _caves.Count(s => s.Contains(tilePosition)) == 0)
+                if (!_map.GetTile(tilePosition.x, tilePosition.y).type.Equals(Tile.Type.Block) && _caves.Count(s => s.Contains(tilePosition)) == 0)
                 {
                     cave = new List<Vector2Int>();
 
@@ -188,7 +188,7 @@
 
         private void LocateCave(Vector2Int tilePosition, List<Vector2Int> cave)
         {
-            foreach (Vector2Int p in NeighboursGetFourDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).Tile.type.Equals(Tile.Type.Block)))
+            foreach (Vector2Int p in NeighboursGetFourDirections(tilePosition).Where(n => !_map.GetTile(n.x, n.y).type.Equals(Tile.Type.Block)))
             {
                 if (!cave.Contains(p))
                 {
@@ -312,7 +312,7 @@
                     {
                         break;
                     }
-                    else if (_map.GetTile(pCavePoint.x, pCavePoint.y).Tile.type.Equals(Tile.Type.Block))
+                    else if (_map.GetTile(pCavePoint.x, pCavePoint.y).type.Equals(Tile.Type.Block))
                     {
                         return;
                     }
@@ -336,7 +336,7 @@
                 {
                     if (TilePositionCheck(new Vector2Int(pLocation.x + p.x, pLocation.y + p.y)))
                     {
-                        if (_map.GetTile(pLocation.x + p.x, pLocation.y + p.y).Tile.type.Equals(Tile.Type.Block))
+                        if (_map.GetTile(pLocation.x + p.x, pLocation.y + p.y).type.Equals(Tile.Type.Block))
                         {
                             validdirections.Add(p);
                         }
@@ -373,7 +373,7 @@
                     //make a point and offset it
                     pStart += pDirection;
 
-                    if (TilePositionCheck(pStart) && !_map.GetTile(pStart.x, pStart.y).Tile.type.Equals(Tile.Type.Block))
+                    if (TilePositionCheck(pStart) && !_map.GetTile(pStart.x, pStart.y).type.Equals(Tile.Type.Block))
                     {
                         lPotentialCorridor.Add(pStart);
                         return lPotentialCorridor;
@@ -418,7 +418,7 @@
                 {
                     if (TilePositionCheck(new Vector2Int(pPoint.x + r, pPoint.y)))
                     {
-                        if (!_map.GetTile(pPoint.x + r, pPoint.y).Tile.type.Equals(Tile.Type.Block))
+                        if (!_map.GetTile(pPoint.x + r, pPoint.y).type.Equals(Tile.Type.Block))
                         {
                             return false;
                         }
@@ -428,7 +428,7 @@
                 {
                     if (TilePositionCheck(new Vector2Int(pPoint.x, pPoint.y + r)))
                     {
-                        if (!_map.GetTile(pPoint.x, pPoint.y + r).Tile.type.Equals(Tile.Type.Block))
+                        if (!_map.GetTile(pPoint.x, pPoint.y + r).type.Equals(Tile.Type.Block))
                         {
                             return false;
                         }
