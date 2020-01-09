@@ -18,8 +18,8 @@
         /// </summary>
         public static List<Vector2Int> FourDirections = new List<Vector2Int>()
         {
-            new Vector2Int (0,-1)    //north
-            , new Vector2Int(0,1)    //south
+            new Vector2Int (0,1)    //north
+            , new Vector2Int(0,-1)    //south
             , new Vector2Int (1,0)   //east
             , new Vector2Int (-1,0)  //west
         };
